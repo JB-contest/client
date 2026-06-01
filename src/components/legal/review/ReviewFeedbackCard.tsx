@@ -5,13 +5,8 @@ import clsx from "clsx";
 import { CheckCircle2 } from "lucide-react";
 import Clause from "@/components/ui/Clause";
 import RiskBadge from "@/components/ui/RiskBadge";
+import { COLOR, RISK_COLOR } from "@/lib/colors";
 import type { ReviewFeedback } from "@/lib/legalData";
-
-const RISK_COLOR: Record<string, string> = {
-  high: "#DC2626",
-  medium: "#F59E0B",
-  low: "#16A34A",
-};
 
 interface Props {
   fb: ReviewFeedback;
@@ -56,7 +51,7 @@ export default function ReviewFeedbackCard({
           {idx + 1}
         </span>
         <span className="lg-fc-ttl">{fb.title}</span>
-        {judged && <CheckCircle2 size={17} color="#16A34A" />}
+        {judged && <CheckCircle2 size={17} color={COLOR.riskLow} />}
         <RiskBadge level={fb.risk} />
       </div>
       <div className="lg-fc-body">

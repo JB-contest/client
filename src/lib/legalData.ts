@@ -1,6 +1,7 @@
 // 준법자문가 (Compliance advisor) workspace mock data.
 
-import type { RiskLevel } from "./data";
+import { COLOR } from "./colors";
+import { STATUS_MAP, type RiskLevel } from "./data";
 
 export type LegalStatus =
   | "approved"
@@ -119,10 +120,10 @@ export const LEGAL_PROJECTS: LegalProject[] = [
     type: "신용대출",
     count: "소재 4건",
     pipeline: [
-      { label: "검토 대기", n: 1, color: "#DC2626" },
-      { label: "AI 검증중", n: 1, color: "#0EA5E9" },
-      { label: "수정 요청", n: 1, color: "#F59E0B" },
-      { label: "승인 완료", n: 1, color: "#16A34A" },
+      { label: "검토 대기", n: 1, color: COLOR.riskHigh },
+      { label: "AI 검증중", n: 1, color: COLOR.info },
+      { label: "수정 요청", n: 1, color: COLOR.riskMedium },
+      { label: "승인 완료", n: 1, color: COLOR.riskLow },
     ],
   },
   {
@@ -131,10 +132,10 @@ export const LEGAL_PROJECTS: LegalProject[] = [
     type: "신용대출",
     count: "소재 4건",
     pipeline: [
-      { label: "검토 대기", n: 2, color: "#DC2626" },
-      { label: "AI 검증중", n: 0, color: "#0EA5E9" },
-      { label: "수정 요청", n: 1, color: "#F59E0B" },
-      { label: "승인 완료", n: 1, color: "#16A34A" },
+      { label: "검토 대기", n: 2, color: COLOR.riskHigh },
+      { label: "AI 검증중", n: 0, color: COLOR.info },
+      { label: "수정 요청", n: 1, color: COLOR.riskMedium },
+      { label: "승인 완료", n: 1, color: COLOR.riskLow },
     ],
   },
 ];
@@ -219,9 +220,9 @@ export const VIOLATION_DIST: ViolationItem[] = [
 ];
 
 export const LOAN_DIST: LoanDistItem[] = [
-  { label: "신용대출", n: 68, color: "#0B2F6E" },
-  { label: "담보대출", n: 54, color: "#1F6FEB" },
-  { label: "정책금융", n: 25, color: "#0EA5E9" },
+  { label: "신용대출", n: 68, color: COLOR.jbNavy },
+  { label: "담보대출", n: 54, color: COLOR.jbBlue },
+  { label: "정책금융", n: 25, color: COLOR.info },
 ];
 
 export const HIST_ROWS: HistRow[] = [
@@ -239,12 +240,8 @@ export const HIST_ROWS: HistRow[] = [
 ];
 
 export const LEGAL_STATUS_MAP: Record<LegalStatus, { cls: string; label: string }> = {
-  approved: { cls: "pill-approved", label: "승인 완료" },
-  waiting: { cls: "pill-waiting", label: "검토 대기" },
-  ai: { cls: "pill-ai", label: "AI 검증중" },
-  revise: { cls: "pill-revise", label: "수정 요청" },
+  ...STATUS_MAP,
   rejected: { cls: "pill-rejected", label: "반려" },
-  progress: { cls: "pill-progress", label: "진행중" },
 };
 
 export const RESULT_MAP: Record<ReviewResult, { cls: string; label: string }> = {
