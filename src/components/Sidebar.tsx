@@ -6,8 +6,10 @@ import clsx from "clsx";
 import {
   ChevronDown,
   FolderCheck,
+  History as HistoryIcon,
   Home as HomeIcon,
   LogOut,
+  Repeat,
   Upload,
 } from "lucide-react";
 
@@ -17,12 +19,19 @@ interface SidebarProps {
 
 export default function Sidebar({ onLogout }: SidebarProps) {
   const pathname = usePathname();
+  if (pathname.startsWith("/legal")) return <LegalSidebar onLogout={onLogout} />;
+  return <MarketingSidebar onLogout={onLogout} />;
+}
+
+function MarketingSidebar({ onLogout }: SidebarProps) {
+  const pathname = usePathname();
   const router = useRouter();
 
-  const isHome = pathname === "/" || pathname === "/home";
-  const isFeedback = pathname.startsWith("/feedback");
-  const isUpload = pathname.startsWith("/upload");
-  const isArchive = pathname.startsWith("/archive");
+  const isHome =
+    pathname === "/marketing" || pathname === "/marketing/home";
+  const isFeedback = pathname.startsWith("/marketing/feedback");
+  const isUpload = pathname.startsWith("/marketing/upload");
+  const isArchive = pathname.startsWith("/marketing/archive");
   const homeActive = isHome || isFeedback;
 
   const [homeOpen, setHomeOpen] = useState(true);
@@ -34,11 +43,7 @@ export default function Sidebar({ onLogout }: SidebarProps) {
     <aside className="w-[220px] flex-none bg-white border-r border-border flex flex-col">
       <div className="flex items-center gap-2.5 px-4 pt-[18px] pb-4">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/assets/jb-symbol.png"
-          alt="JB"
-          className="w-8 h-8"
-        />
+        <img src="/assets/jb-symbol.png" alt="JB" className="w-8 h-8" />
         <div>
           <div className="font-bold text-sm leading-tight">제이비</div>
           <div className="text-[11px] text-text-2 mt-[1px]">마케팅팀</div>
@@ -66,7 +71,7 @@ export default function Sidebar({ onLogout }: SidebarProps) {
               <button
                 type="button"
                 className={clsx("nav-subitem", isHome && "active")}
-                onClick={() => router.push("/home")}
+                onClick={() => router.push("/marketing/home")}
               >
                 <span className="sub-dot" />
                 심의 현황
@@ -74,7 +79,7 @@ export default function Sidebar({ onLogout }: SidebarProps) {
               <button
                 type="button"
                 className={clsx("nav-subitem", isFeedback && "active")}
-                onClick={() => router.push("/feedback")}
+                onClick={() => router.push("/marketing/feedback")}
               >
                 <span className="sub-dot" />
                 피드백 수정
@@ -86,7 +91,7 @@ export default function Sidebar({ onLogout }: SidebarProps) {
         <button
           type="button"
           className={clsx("nav-item", isUpload && "active")}
-          onClick={() => router.push("/upload")}
+          onClick={() => router.push("/marketing/upload")}
         >
           <Upload size={18} />
           자료 업로드
@@ -94,13 +99,114 @@ export default function Sidebar({ onLogout }: SidebarProps) {
         <button
           type="button"
           className={clsx("nav-item", isArchive && "active")}
-          onClick={() => router.push("/archive")}
+          onClick={() => router.push("/marketing/archive")}
         >
           <FolderCheck size={18} />
           심의필 보관함
         </button>
       </nav>
-      <div className="p-2 border-t border-border">
+      <div className="p-2 border-t border-border flex flex-col gap-1">
+        <button
+          type="button"
+          className="nav-item w-auto"
+          onClick={() => router.push("/legal/home")}
+          title="준법자문가 워크스페이스로 전환"
+        >
+          <Repeat size={18} />
+          준법자문가로 전환
+        </button>
+        <button type="button" className="nav-item w-auto" onClick={onLogout}>
+          <LogOut size={18} />
+          로그아웃
+        </button>
+      </div>
+    </aside>
+  );
+}
+
+function LegalSidebar({ onLogout }: SidebarProps) {
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const isLegalHome =
+    pathname === "/legal" || pathname === "/legal/home";
+  const isLegalReview = pathname.startsWith("/legal/review");
+  const isLegalHistory = pathname.startsWith("/legal/history");
+  const homeActive = isLegalHome || isLegalReview;
+
+  const [homeOpen, setHomeOpen] = useState(true);
+  useEffect(() => {
+    if (homeActive) setHomeOpen(true);
+  }, [homeActive]);
+
+  return (
+    <aside className="w-[220px] flex-none bg-white border-r border-border flex flex-col">
+      <div className="flex items-center gap-2.5 px-4 pt-[18px] pb-4">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/assets/jb-symbol.png" alt="JB" className="w-8 h-8" />
+        <div>
+          <div className="font-bold text-sm leading-tight">제이비</div>
+          <div className="text-[11px] text-text-2 mt-[1px]">준법자문가</div>
+        </div>
+      </div>
+      <nav className="sb-nav">
+        <div className="sb-sec">워크스페이스</div>
+
+        <div className="mb-0.5">
+          <button
+            type="button"
+            className={clsx("nav-item nav-parent", homeActive && "on")}
+            onClick={() => setHomeOpen((o) => !o)}
+          >
+            <span className="np-left">
+              <HomeIcon size={18} />
+              HOME
+            </span>
+            <span className={clsx("np-chev", homeOpen && "open")}>
+              <ChevronDown size={16} />
+            </span>
+          </button>
+          {homeOpen && (
+            <div className="nav-sub">
+              <button
+                type="button"
+                className={clsx("nav-subitem", isLegalHome && "active")}
+                onClick={() => router.push("/legal/home")}
+              >
+                <span className="sub-dot" />
+                심의 현황
+              </button>
+              <button
+                type="button"
+                className={clsx("nav-subitem", isLegalReview && "active")}
+                onClick={() => router.push("/legal/review")}
+              >
+                <span className="sub-dot" />
+                검토
+              </button>
+            </div>
+          )}
+        </div>
+
+        <button
+          type="button"
+          className={clsx("nav-item", isLegalHistory && "active")}
+          onClick={() => router.push("/legal/history")}
+        >
+          <HistoryIcon size={18} />
+          심의 이력
+        </button>
+      </nav>
+      <div className="p-2 border-t border-border flex flex-col gap-1">
+        <button
+          type="button"
+          className="nav-item w-auto"
+          onClick={() => router.push("/marketing/home")}
+          title="마케팅팀 워크스페이스로 전환"
+        >
+          <Repeat size={18} />
+          마케팅팀으로 전환
+        </button>
         <button type="button" className="nav-item w-auto" onClick={onLogout}>
           <LogOut size={18} />
           로그아웃

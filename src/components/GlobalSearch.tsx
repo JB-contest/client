@@ -49,11 +49,11 @@ export default function GlobalSearch() {
     setOpen(false);
     setQ("");
     if (hit.kind === "archive") {
-      router.push(`/archive/${encodeURIComponent(hit.a.no)}`);
+      router.push(`/marketing/archive/${encodeURIComponent(hit.a.no)}`);
     } else if (hit.m.status === "approved") {
-      router.push("/archive");
+      router.push("/marketing/archive");
     } else {
-      router.push("/feedback");
+      router.push("/marketing/feedback");
     }
   };
 

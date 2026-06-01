@@ -43,7 +43,7 @@ export default function UploadActionPanel({
           </button>
           <button
             className="btn btn-ghost w-full"
-            onClick={() => router.push("/feedback")}
+            onClick={() => router.push("/marketing/feedback")}
           >
             <MessagesSquare size={16} />피드백 확인하기
           </button>

@@ -6,7 +6,8 @@ import type { ArchiveItem } from "@/lib/data";
 
 export default function ArchiveCard({ a }: { a: ArchiveItem }) {
   const router = useRouter();
-  const goDetail = () => router.push(`/archive/${encodeURIComponent(a.no)}`);
+  const goDetail = () =>
+    router.push(`/marketing/archive/${encodeURIComponent(a.no)}`);
 
   return (
     <div
