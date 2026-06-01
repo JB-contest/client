@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import { CheckCircle2, AlertCircle } from "lucide-react";
+import { COLOR } from "@/lib/colors";
 
 type ToastKind = "success" | "error";
 interface ToastItem {
@@ -62,9 +63,9 @@ function Toasts({ items }: { items: ToastItem[] }) {
         <div key={t.id} className={`toast ${t.kind}`}>
           <span className="bar" />
           {t.kind === "success" ? (
-            <CheckCircle2 size={18} color="#16A34A" />
+            <CheckCircle2 size={18} color={COLOR.riskLow} />
           ) : (
-            <AlertCircle size={18} color="#DC2626" />
+            <AlertCircle size={18} color={COLOR.riskHigh} />
           )}
           <span style={{ fontSize: 13.5, fontWeight: 500 }}>{t.msg}</span>
         </div>

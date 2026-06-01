@@ -1,4 +1,5 @@
 import { Check } from "lucide-react";
+import { COLOR } from "@/lib/colors";
 
 export default function SubmittedReceipt() {
   return (
@@ -10,7 +11,7 @@ export default function SubmittedReceipt() {
         className="w-[46px] h-[46px] rounded-full bg-white grid place-content-center mb-3"
         style={{ border: "1px solid #16A34A" }}
       >
-        <Check size={26} color="#16A34A" />
+        <Check size={26} color={COLOR.riskLow} />
       </div>
       <div className="text-[15px] font-bold">준법 검토가 접수되었습니다</div>
       <div className="text-[12.5px] text-text-2 mt-1.5 leading-[1.55]">

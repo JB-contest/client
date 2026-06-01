@@ -4,6 +4,7 @@ import { useState } from "react";
 import clsx from "clsx";
 import { ChevronDown, History } from "lucide-react";
 import Timeline from "@/components/ui/Timeline";
+import { COLOR } from "@/lib/colors";
 import { HISTORY } from "@/lib/data";
 
 export default function HistoryAccordion() {
@@ -12,7 +13,7 @@ export default function HistoryAccordion() {
     <div className={clsx("acc", open && "open")}>
       <div className="acc-head" onClick={() => setOpen((o) => !o)}>
         <div className="acc-title">
-          <History size={16} color="#6B7280" />
+          <History size={16} color={COLOR.text2} />
           심의 이력
           <span className="acc-chip">재학습 적재</span>
         </div>

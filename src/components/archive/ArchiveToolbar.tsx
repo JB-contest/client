@@ -1,6 +1,7 @@
 "use client";
 
 import { Search } from "lucide-react";
+import { COLOR } from "@/lib/colors";
 
 interface Props {
   q: string;
@@ -24,7 +25,7 @@ export default function ArchiveToolbar({
   return (
     <div className="flex items-center gap-2.5 mb-5 flex-wrap">
       <div className="flex items-center gap-2 h-[38px] flex-1 min-w-[240px] max-w-[380px] px-3 border border-border-strong rounded-button bg-white">
-        <Search size={16} color="#9CA3AF" />
+        <Search size={16} color={COLOR.text3} />
         <input
           className="border-none outline-none bg-transparent text-[13.5px] w-full text-text-1"
           placeholder="심의필 번호 · 자료명 · 캠페인 검색"

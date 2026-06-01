@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FileCheck2, FileText, Search, X } from "lucide-react";
 import Pill from "@/components/ui/Pill";
+import { COLOR } from "@/lib/colors";
 import { ARCHIVE, MATERIALS, type Material, type ArchiveItem } from "@/lib/data";
 import { ROUTES } from "@/lib/routes";
 
@@ -88,7 +89,7 @@ export default function GlobalSearch() {
           paddingRight: q ? 32 : 12,
         }}
       >
-        <Search size={16} color="#9CA3AF" />
+        <Search size={16} color={COLOR.text3} />
         <input
           ref={inputRef}
           value={q}

@@ -2,6 +2,7 @@
 
 import clsx from "clsx";
 import { ImageUp } from "lucide-react";
+import { COLOR } from "@/lib/colors";
 
 export type EditorTab = "텍스트" | "이미지";
 
@@ -65,7 +66,7 @@ export default function SourceEditor({
             className="upload-zone"
             style={{ minHeight: 300, justifyContent: "center" }}
           >
-            <ImageUp size={28} color="#1F6FEB" />
+            <ImageUp size={28} color={COLOR.jbBlue} />
             <div className="font-semibold text-sm">
               이미지를 끌어다 놓거나 클릭하여 업로드
             </div>

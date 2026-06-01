@@ -2,6 +2,7 @@
 
 import { History, X } from "lucide-react";
 import Timeline from "@/components/ui/Timeline";
+import { COLOR } from "@/lib/colors";
 import { HISTORY, type ArchiveItem } from "@/lib/data";
 
 interface Props {
@@ -28,7 +29,7 @@ export default function HistoryModal({ open, onClose, cert }: Props) {
       >
         <div className="flex items-center justify-between px-5 py-3.5 border-b border-border">
           <div className="acc-title text-base">
-            <History size={18} color="#6B7280" />
+            <History size={18} color={COLOR.text2} />
             심의 이력
             <span className="acc-chip">F17 · 재학습 적재</span>
           </div>

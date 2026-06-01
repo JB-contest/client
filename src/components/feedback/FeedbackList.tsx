@@ -27,7 +27,7 @@ export default function FeedbackList({
         </div>
         <div className="text-xs text-text-2 whitespace-nowrap">
           저장{" "}
-          <b className="num" style={{ color: "#16A34A" }}>
+          <b className="num text-risk-low">
             {savedCount}
           </b>{" "}
           / {FEEDBACK.length}

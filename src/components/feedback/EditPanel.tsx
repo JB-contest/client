@@ -9,6 +9,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import RiskBadge from "@/components/ui/RiskBadge";
+import { COLOR } from "@/lib/colors";
 import type { Feedback } from "@/lib/data";
 
 interface Props {
@@ -35,7 +36,7 @@ export default function EditPanel({
           <div className="panel-title">자료 수정</div>
         </div>
         <div className="edit-empty">
-          <MousePointerClick size={26} color="#9CA3AF" />
+          <MousePointerClick size={26} color={COLOR.text3} />
           <div className="text-[13.5px] font-semibold text-text-2">
             수정할 피드백을 선택하세요
           </div>

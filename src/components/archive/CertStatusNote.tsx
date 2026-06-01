@@ -6,10 +6,7 @@ export default function CertStatusNote() {
       className="rounded-card p-3.5"
       style={{ border: "1px solid #16A34A", background: "#E7F6EC" }}
     >
-      <div
-        className="text-[13.5px] font-bold flex items-center gap-1.5"
-        style={{ color: "#16A34A" }}
-      >
+      <div className="text-[13.5px] font-bold flex items-center gap-1.5 text-risk-low">
         <CheckCircle2 size={16} />
         승인되었습니다
       </div>
