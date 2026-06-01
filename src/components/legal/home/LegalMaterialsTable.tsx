@@ -3,14 +3,17 @@
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import ErrCell from "@/components/ui/ErrCell";
-import Pill from "@/components/ui/Pill";
-import type { Material } from "@/lib/data";
+import LegalPill from "./LegalPill";
+import type { LegalMaterial } from "@/lib/legalData";
 
-export default function MaterialsTable({ rows }: { rows: Material[] }) {
+export default function LegalMaterialsTable({
+  rows,
+}: {
+  rows: LegalMaterial[];
+}) {
   const router = useRouter();
-
   return (
-    <div className="px-2 pb-1.5 pt-0.5">
+    <div className="px-3 pb-2 pt-1">
       <table className="table">
         <thead>
           <tr>
@@ -27,14 +30,14 @@ export default function MaterialsTable({ rows }: { rows: Material[] }) {
           {rows.map((r, i) => (
             <tr key={i}>
               <td>
-                <div className="font-semibold text-[13.5px]">{r.name}</div>
-                <div className="text-[11.5px] text-text-3">{r.camp}</div>
+                <div className="cell-name">{r.name}</div>
+                <div className="cell-sub">{r.camp}</div>
               </td>
               <td className="mono text-xs text-text-2">{r.id}</td>
               <td className="text-text-2">{r.surface}</td>
-              <td>{r.type}</td>
+              <td className="font-medium">{r.type}</td>
               <td>
-                <Pill status={r.status} />
+                <LegalPill status={r.status} />
               </td>
               <td>
                 <ErrCell v={r.err} c={r.errC} />
@@ -42,19 +45,24 @@ export default function MaterialsTable({ rows }: { rows: Material[] }) {
               <td className="text-right">
                 <button
                   className="btn btn-secondary btn-sm"
-                  onClick={() =>
-                    router.push(
-                      r.status === "approved"
-                        ? "/marketing/archive"
-                        : "/marketing/feedback",
-                    )
-                  }
+                  onClick={() => router.push("/legal/review")}
                 >
-                  보기 <ArrowRight size={14} />
+                  검토 <ArrowRight size={14} />
                 </button>
               </td>
             </tr>
           ))}
+          {rows.length === 0 && (
+            <tr>
+              <td
+                colSpan={7}
+                className="text-center text-text-3"
+                style={{ padding: "28px 0" }}
+              >
+                해당 상태의 자료가 없습니다.
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
     </div>

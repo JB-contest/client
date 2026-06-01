@@ -24,7 +24,10 @@ export default function CertActions({
       <button className="btn btn-secondary" onClick={onShowHistory}>
         <History size={16} />심의 이력 보기
       </button>
-      <button className="btn btn-ghost" onClick={() => router.push("/upload")}>
+      <button
+        className="btn btn-ghost"
+        onClick={() => router.push("/marketing/upload")}
+      >
         <Plus size={16} />새 자료 업로드
       </button>
     </div>
