@@ -5,6 +5,7 @@ import { MessagesSquare, Plus, ShieldCheck } from "lucide-react";
 import InfoBanner from "./InfoBanner";
 import SubmittedReceipt from "./SubmittedReceipt";
 import ValidationSteps from "./ValidationSteps";
+import { ROUTES } from "@/lib/routes";
 
 interface Props {
   done: boolean;
@@ -43,7 +44,7 @@ export default function UploadActionPanel({
           </button>
           <button
             className="btn btn-ghost w-full"
-            onClick={() => router.push("/marketing/feedback")}
+            onClick={() => router.push(ROUTES.marketing.feedback)}
           >
             <MessagesSquare size={16} />피드백 확인하기
           </button>

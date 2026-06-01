@@ -5,6 +5,7 @@ import { ArrowRight } from "lucide-react";
 import ErrCell from "@/components/ui/ErrCell";
 import LegalPill from "./LegalPill";
 import type { LegalMaterial } from "@/lib/legalData";
+import { ROUTES } from "@/lib/routes";
 
 export default function LegalMaterialsTable({
   rows,
@@ -45,7 +46,7 @@ export default function LegalMaterialsTable({
               <td className="text-right">
                 <button
                   className="btn btn-secondary btn-sm"
-                  onClick={() => router.push("/legal/review")}
+                  onClick={() => router.push(ROUTES.legal.review)}
                 >
                   검토 <ArrowRight size={14} />
                 </button>

@@ -3,11 +3,11 @@
 import { useRouter } from "next/navigation";
 import { FileCheck2 } from "lucide-react";
 import type { ArchiveItem } from "@/lib/data";
+import { ROUTES } from "@/lib/routes";
 
 export default function ArchiveCard({ a }: { a: ArchiveItem }) {
   const router = useRouter();
-  const goDetail = () =>
-    router.push(`/marketing/archive/${encodeURIComponent(a.no)}`);
+  const goDetail = () => router.push(ROUTES.marketing.cert(a.no));
 
   return (
     <div

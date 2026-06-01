@@ -6,6 +6,7 @@ import PageHead from "@/components/PageHead";
 import KpiGrid from "@/components/home/KpiGrid";
 import ProjectGrid from "@/components/home/ProjectGrid";
 import MaterialsPanel from "@/components/home/MaterialsPanel";
+import { ROUTES } from "@/lib/routes";
 
 export default function HomePage() {
   const router = useRouter();
@@ -18,7 +19,7 @@ export default function HomePage() {
         actions={
           <button
             className="btn btn-primary"
-            onClick={() => router.push("/marketing/upload")}
+            onClick={() => router.push(ROUTES.marketing.upload)}
           >
             <Plus size={16} />새 자료 업로드
           </button>

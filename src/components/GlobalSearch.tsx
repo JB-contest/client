@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { FileCheck2, FileText, Search, X } from "lucide-react";
 import Pill from "@/components/ui/Pill";
 import { ARCHIVE, MATERIALS, type Material, type ArchiveItem } from "@/lib/data";
+import { ROUTES } from "@/lib/routes";
 
 type Hit =
   | { kind: "material"; m: Material }
@@ -49,11 +50,11 @@ export default function GlobalSearch() {
     setOpen(false);
     setQ("");
     if (hit.kind === "archive") {
-      router.push(`/marketing/archive/${encodeURIComponent(hit.a.no)}`);
+      router.push(ROUTES.marketing.cert(hit.a.no));
     } else if (hit.m.status === "approved") {
-      router.push("/marketing/archive");
+      router.push(ROUTES.marketing.archive);
     } else {
-      router.push("/marketing/feedback");
+      router.push(ROUTES.marketing.feedback);
     }
   };
 

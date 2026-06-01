@@ -6,6 +6,7 @@ import PageHead from "@/components/PageHead";
 import CertCard from "@/components/archive/CertCard";
 import CertSidePanel from "@/components/archive/CertSidePanel";
 import { ARCHIVE } from "@/lib/data";
+import { ROUTES } from "@/lib/routes";
 
 export default function CertDetailPage() {
   const params = useParams<{ no: string }>();
@@ -21,7 +22,7 @@ export default function CertDetailPage() {
         actions={
           <button
             className="btn btn-ghost"
-            onClick={() => router.push("/marketing/archive")}
+            onClick={() => router.push(ROUTES.marketing.archive)}
           >
             <ArrowLeft size={16} />목록으로
           </button>

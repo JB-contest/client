@@ -12,6 +12,7 @@ import {
   Repeat,
   Upload,
 } from "lucide-react";
+import { ROUTES } from "@/lib/routes";
 
 interface SidebarProps {
   onLogout: () => void;
@@ -19,7 +20,8 @@ interface SidebarProps {
 
 export default function Sidebar({ onLogout }: SidebarProps) {
   const pathname = usePathname();
-  if (pathname.startsWith("/legal")) return <LegalSidebar onLogout={onLogout} />;
+  if (pathname.startsWith(ROUTES.legal.root))
+    return <LegalSidebar onLogout={onLogout} />;
   return <MarketingSidebar onLogout={onLogout} />;
 }
 
@@ -28,10 +30,10 @@ function MarketingSidebar({ onLogout }: SidebarProps) {
   const router = useRouter();
 
   const isHome =
-    pathname === "/marketing" || pathname === "/marketing/home";
-  const isFeedback = pathname.startsWith("/marketing/feedback");
-  const isUpload = pathname.startsWith("/marketing/upload");
-  const isArchive = pathname.startsWith("/marketing/archive");
+    pathname === ROUTES.marketing.root || pathname === ROUTES.marketing.home;
+  const isFeedback = pathname.startsWith(ROUTES.marketing.feedback);
+  const isUpload = pathname.startsWith(ROUTES.marketing.upload);
+  const isArchive = pathname.startsWith(ROUTES.marketing.archive);
   const homeActive = isHome || isFeedback;
 
   const [homeOpen, setHomeOpen] = useState(true);
@@ -71,7 +73,7 @@ function MarketingSidebar({ onLogout }: SidebarProps) {
               <button
                 type="button"
                 className={clsx("nav-subitem", isHome && "active")}
-                onClick={() => router.push("/marketing/home")}
+                onClick={() => router.push(ROUTES.marketing.home)}
               >
                 <span className="sub-dot" />
                 심의 현황
@@ -79,7 +81,7 @@ function MarketingSidebar({ onLogout }: SidebarProps) {
               <button
                 type="button"
                 className={clsx("nav-subitem", isFeedback && "active")}
-                onClick={() => router.push("/marketing/feedback")}
+                onClick={() => router.push(ROUTES.marketing.feedback)}
               >
                 <span className="sub-dot" />
                 피드백 수정
@@ -91,7 +93,7 @@ function MarketingSidebar({ onLogout }: SidebarProps) {
         <button
           type="button"
           className={clsx("nav-item", isUpload && "active")}
-          onClick={() => router.push("/marketing/upload")}
+          onClick={() => router.push(ROUTES.marketing.upload)}
         >
           <Upload size={18} />
           자료 업로드
@@ -99,7 +101,7 @@ function MarketingSidebar({ onLogout }: SidebarProps) {
         <button
           type="button"
           className={clsx("nav-item", isArchive && "active")}
-          onClick={() => router.push("/marketing/archive")}
+          onClick={() => router.push(ROUTES.marketing.archive)}
         >
           <FolderCheck size={18} />
           심의필 보관함
@@ -109,7 +111,7 @@ function MarketingSidebar({ onLogout }: SidebarProps) {
         <button
           type="button"
           className="nav-item w-auto"
-          onClick={() => router.push("/legal/home")}
+          onClick={() => router.push(ROUTES.legal.home)}
           title="준법자문가 워크스페이스로 전환"
         >
           <Repeat size={18} />
@@ -129,9 +131,9 @@ function LegalSidebar({ onLogout }: SidebarProps) {
   const router = useRouter();
 
   const isLegalHome =
-    pathname === "/legal" || pathname === "/legal/home";
-  const isLegalReview = pathname.startsWith("/legal/review");
-  const isLegalHistory = pathname.startsWith("/legal/history");
+    pathname === ROUTES.legal.root || pathname === ROUTES.legal.home;
+  const isLegalReview = pathname.startsWith(ROUTES.legal.review);
+  const isLegalHistory = pathname.startsWith(ROUTES.legal.history);
   const homeActive = isLegalHome || isLegalReview;
 
   const [homeOpen, setHomeOpen] = useState(true);
@@ -171,7 +173,7 @@ function LegalSidebar({ onLogout }: SidebarProps) {
               <button
                 type="button"
                 className={clsx("nav-subitem", isLegalHome && "active")}
-                onClick={() => router.push("/legal/home")}
+                onClick={() => router.push(ROUTES.legal.home)}
               >
                 <span className="sub-dot" />
                 심의 현황
@@ -179,7 +181,7 @@ function LegalSidebar({ onLogout }: SidebarProps) {
               <button
                 type="button"
                 className={clsx("nav-subitem", isLegalReview && "active")}
-                onClick={() => router.push("/legal/review")}
+                onClick={() => router.push(ROUTES.legal.review)}
               >
                 <span className="sub-dot" />
                 검토
@@ -191,7 +193,7 @@ function LegalSidebar({ onLogout }: SidebarProps) {
         <button
           type="button"
           className={clsx("nav-item", isLegalHistory && "active")}
-          onClick={() => router.push("/legal/history")}
+          onClick={() => router.push(ROUTES.legal.history)}
         >
           <HistoryIcon size={18} />
           심의 이력
@@ -201,7 +203,7 @@ function LegalSidebar({ onLogout }: SidebarProps) {
         <button
           type="button"
           className="nav-item w-auto"
-          onClick={() => router.push("/marketing/home")}
+          onClick={() => router.push(ROUTES.marketing.home)}
           title="마케팅팀 워크스페이스로 전환"
         >
           <Repeat size={18} />

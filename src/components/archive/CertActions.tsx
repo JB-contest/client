@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { Download, History, Plus } from "lucide-react";
 import { useToast } from "@/components/Toaster";
+import { ROUTES } from "@/lib/routes";
 
 export default function CertActions({
   onShowHistory,
@@ -26,7 +27,7 @@ export default function CertActions({
       </button>
       <button
         className="btn btn-ghost"
-        onClick={() => router.push("/marketing/upload")}
+        onClick={() => router.push(ROUTES.marketing.upload)}
       >
         <Plus size={16} />새 자료 업로드
       </button>

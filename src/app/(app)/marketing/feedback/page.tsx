@@ -12,6 +12,7 @@ import ProgressPanel from "@/components/feedback/ProgressPanel";
 import SourceDoc from "@/components/feedback/SourceDoc";
 import { useToast } from "@/components/Toaster";
 import { FEEDBACK } from "@/lib/data";
+import { ROUTES } from "@/lib/routes";
 
 export default function FeedbackPage() {
   const router = useRouter();
@@ -36,7 +37,7 @@ export default function FeedbackPage() {
         actions={
           <button
             className="btn btn-ghost"
-            onClick={() => router.push("/marketing/upload")}
+            onClick={() => router.push(ROUTES.marketing.upload)}
           >
             <ArrowLeft size={16} />목록으로
           </button>
@@ -73,7 +74,7 @@ export default function FeedbackPage() {
             total={FEEDBACK.length}
             onSubmit={() => {
               toast("수정본 재검증을 요청했습니다", "success");
-              router.push("/marketing/archive");
+              router.push(ROUTES.marketing.archive);
             }}
           />
           <HistoryAccordion />

@@ -5,6 +5,7 @@ import { ArrowRight } from "lucide-react";
 import ErrCell from "@/components/ui/ErrCell";
 import Pill from "@/components/ui/Pill";
 import type { Material } from "@/lib/data";
+import { ROUTES } from "@/lib/routes";
 
 export default function MaterialsTable({ rows }: { rows: Material[] }) {
   const router = useRouter();
@@ -45,8 +46,8 @@ export default function MaterialsTable({ rows }: { rows: Material[] }) {
                   onClick={() =>
                     router.push(
                       r.status === "approved"
-                        ? "/marketing/archive"
-                        : "/marketing/feedback",
+                        ? ROUTES.marketing.archive
+                        : ROUTES.marketing.feedback,
                     )
                   }
                 >

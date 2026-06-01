@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ShieldCheck } from "lucide-react";
+import { ROUTES } from "@/lib/routes";
 
 interface Props {
   email: string;
@@ -12,7 +13,7 @@ interface Props {
 export default function SuccessScreen({ email, onReset }: Props) {
   const router = useRouter();
   useEffect(() => {
-    const id = setTimeout(() => router.push("/marketing/home"), 1600);
+    const id = setTimeout(() => router.push(ROUTES.marketing.home), 1600);
     return () => clearTimeout(id);
   }, [router]);
 
