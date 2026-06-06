@@ -133,8 +133,9 @@ function LegalSidebar({ onLogout }: SidebarProps) {
   const isLegalHome =
     pathname === ROUTES.legal.root || pathname === ROUTES.legal.home;
   const isLegalReview = pathname.startsWith(ROUTES.legal.review);
+  const isLegalIssue = pathname.startsWith(ROUTES.legal.issue);
   const isLegalHistory = pathname.startsWith(ROUTES.legal.history);
-  const homeActive = isLegalHome || isLegalReview;
+  const homeActive = isLegalHome || isLegalReview || isLegalIssue;
 
   const [homeOpen, setHomeOpen] = useState(true);
   useEffect(() => {
@@ -185,6 +186,14 @@ function LegalSidebar({ onLogout }: SidebarProps) {
               >
                 <span className="sub-dot" />
                 검토
+              </button>
+              <button
+                type="button"
+                className={clsx("nav-subitem", isLegalIssue && "active")}
+                onClick={() => router.push(ROUTES.legal.issue)}
+              >
+                <span className="sub-dot" />
+                심의필 발급
               </button>
             </div>
           )}

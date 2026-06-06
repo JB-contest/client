@@ -16,6 +16,7 @@ export const ROUTES = {
     root: "/legal",
     home: "/legal/home",
     review: "/legal/review",
+    issue: "/legal/issue",
     history: "/legal/history",
   },
 } as const;

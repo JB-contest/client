@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import PageHead from "@/components/PageHead";
 import ReviewActionPanel from "@/components/legal/review/ReviewActionPanel";
 import ReviewFeedbackList from "@/components/legal/review/ReviewFeedbackList";
@@ -8,10 +9,10 @@ import ReviewHistoryPanel from "@/components/legal/review/ReviewHistoryPanel";
 import ReviewMetaBar from "@/components/legal/review/ReviewMetaBar";
 import ReviewSourceDoc from "@/components/legal/review/ReviewSourceDoc";
 import { useToast } from "@/components/Toaster";
+import { ROUTES } from "@/lib/routes";
 import { REVIEW_DATA, type ReviewData } from "@/lib/legalData";
 import {
   buildReviewData,
-  createApproval,
   createFeedback,
   getDocument,
   getValidationResults,
@@ -24,6 +25,7 @@ import {
 
 export default function LegalReviewPage() {
   const { toast } = useToast();
+  const router = useRouter();
   const [d, setD] = useState<ReviewData>(REVIEW_DATA);
   const [docId, setDocId] = useState<number | null>(null);
   const [validation, setValidation] = useState<ValidationResultResponse | null>(
@@ -84,15 +86,6 @@ export default function LegalReviewPage() {
         it.ev.startsWith("검토") ? { ...it, dot: "done" } : it,
       ),
     }));
-  const markApproved = () =>
-    setD((prev) => ({
-      ...prev,
-      history: prev.history.map((it, i) =>
-        i === prev.history.length - 1
-          ? { ...it, dot: "done", ts: "완료" }
-          : { ...it, dot: it.dot === "active" ? "done" : it.dot },
-      ),
-    }));
 
   const actions = {
     onSave: async () => {
@@ -106,15 +99,11 @@ export default function LegalReviewPage() {
       markReview();
       toast("검토 의견이 저장되었습니다", "success");
     },
-    onApprove: async () => {
-      if (docId != null) {
-        await createApproval(docId, {
-          approverId: COMPLIANCE_USER_ID,
-          reviewNumber: `JB-${docId}`,
-        }).catch(() => {});
-      }
-      markApproved();
-      toast("최종 승인되었습니다", "success");
+    onApprove: () => {
+      // 실제 승인·심의필 발급은 발급 화면에서 처리한다. 검토 대상 문서 id 를 함께 넘긴다.
+      router.push(
+        docId != null ? `${ROUTES.legal.issue}?id=${docId}` : ROUTES.legal.issue,
+      );
     },
     onReject: async () => {
       if (docId != null) {
