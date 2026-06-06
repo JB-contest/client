@@ -76,13 +76,15 @@ export default function EditPanel({
           <div className="text-[11px] font-bold text-text-3 tracking-[0.04em]">
             수정 문구
           </div>
-          <button
-            className="btn btn-ghost btn-sm"
-            style={{ height: 26, color: "#0EA5E9" }}
-            onClick={() => setDraft(active, fb.suggest)}
-          >
-            <Sparkles size={13} />AI 제안 반영
-          </button>
+          {fb.suggest && (
+            <button
+              className="btn btn-ghost btn-sm"
+              style={{ height: 26, color: "#0EA5E9" }}
+              onClick={() => setDraft(active, fb.suggest)}
+            >
+              <Sparkles size={13} />AI 제안 반영
+            </button>
+          )}
         </div>
         <textarea
           className="textarea"

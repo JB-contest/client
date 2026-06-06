@@ -3,15 +3,21 @@
 import { Fragment } from "react";
 import clsx from "clsx";
 import { MousePointerClick } from "lucide-react";
-import { REVIEW_DATA } from "@/lib/legalData";
+import { REVIEW_DATA, type ReviewSourceSeg } from "@/lib/legalData";
 
 interface Props {
   active: number | null;
   setActive: (v: number | null) => void;
+  source?: ReviewSourceSeg[];
+  total?: number;
 }
 
-export default function ReviewSourceDoc({ active, setActive }: Props) {
-  const total = REVIEW_DATA.feedback.length;
+export default function ReviewSourceDoc({
+  active,
+  setActive,
+  source = REVIEW_DATA.source,
+  total = REVIEW_DATA.feedback.length,
+}: Props) {
   return (
     <div className="panel">
       <div className="panel-head">
@@ -23,7 +29,7 @@ export default function ReviewSourceDoc({ active, setActive }: Props) {
       </div>
       <div style={{ padding: "18px 22px 16px" }}>
         <p className="rev-doc">
-          {REVIEW_DATA.source.map((seg, i) => {
+          {source.map((seg, i) => {
             if (!seg.hl) return <Fragment key={i}>{seg.t}</Fragment>;
             const cls = clsx("hl", `hl-${seg.hl}`, active === seg.fb && "active");
             return (

@@ -10,7 +10,7 @@ export default function Topbar() {
           <Bell size={19} />
           <span className="tb-badge" />
         </div>
-        <div className="avatar">제</div>
+        <div className="avatar">홍</div>
       </div>
     </header>
   );

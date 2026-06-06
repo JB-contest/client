@@ -24,6 +24,13 @@ export const RISK_COLOR: Record<RiskLevel, string> = {
   low: COLOR.riskLow,
 };
 
+// 선택 카드 강조용 반투명 링 색(위험도별).
+export const RISK_RING: Record<RiskLevel, string> = {
+  high: "rgba(220, 38, 38, 0.18)",
+  medium: "rgba(245, 158, 11, 0.22)",
+  low: "rgba(22, 163, 74, 0.18)",
+};
+
 export const ERR_COLOR: Record<"high" | "medium" | "low" | "muted", string> = {
   high: COLOR.riskHigh,
   medium: COLOR.riskMedium,

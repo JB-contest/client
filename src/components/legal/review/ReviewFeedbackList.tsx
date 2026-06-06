@@ -21,16 +21,10 @@ export default function ReviewFeedbackList({
 }: Props) {
   return (
     <div>
-      <div className="flex items-center justify-between mb-3">
-        <div
-          style={{
-            fontSize: 16,
-            fontWeight: 700,
-            letterSpacing: "-0.01em",
-          }}
-        >
+      <div className="flex items-center justify-between my-2 mb-2.5">
+        <div className="text-sm font-semibold">
           피드백{" "}
-          <span className="muted num text-sm font-medium ml-1.5">
+          <span className="text-text-2 num font-normal ml-1.5">
             · {feedback.length}건
           </span>
         </div>
@@ -39,7 +33,7 @@ export default function ReviewFeedbackList({
           해당 카드 선택하면 화면 강조, 자료 수정 가능
         </span>
       </div>
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-2.5">
         {feedback.map((fb, i) => (
           <ReviewFeedbackCard
             key={i}

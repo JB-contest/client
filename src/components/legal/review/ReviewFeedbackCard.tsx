@@ -5,7 +5,7 @@ import clsx from "clsx";
 import { CheckCircle2 } from "lucide-react";
 import Clause from "@/components/ui/Clause";
 import RiskBadge from "@/components/ui/RiskBadge";
-import { COLOR, RISK_COLOR } from "@/lib/colors";
+import { COLOR, RISK_COLOR, RISK_RING } from "@/lib/colors";
 import type { ReviewFeedback } from "@/lib/legalData";
 
 interface Props {
@@ -44,7 +44,21 @@ export default function ReviewFeedbackCard({
       ref={ref}
       className={clsx("lg-fc", selected && "sel")}
       onClick={onSelect}
-      style={{ borderLeft: `3px solid ${RISK_COLOR[fb.risk]}` }}
+      style={{
+        // 좌측 보더 색은 항상 유지. border-left 단축 + border-color 혼용 시
+        // React 가 선택 해제할 때 left 색까지 지우므로 longhand 로 분리한다.
+        borderLeftWidth: 3,
+        borderLeftStyle: "solid",
+        borderLeftColor: RISK_COLOR[fb.risk],
+        ...(selected
+          ? {
+              borderTopColor: RISK_COLOR[fb.risk],
+              borderRightColor: RISK_COLOR[fb.risk],
+              borderBottomColor: RISK_COLOR[fb.risk],
+              boxShadow: `0 0 0 3px ${RISK_RING[fb.risk]}`,
+            }
+          : {}),
+      }}
     >
       <div className="lg-fc-top">
         <span className="lg-fc-idx" style={{ background: RISK_COLOR[fb.risk] }}>

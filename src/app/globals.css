@@ -1473,29 +1473,30 @@
 
   .legal-app .ftabs {
     display: flex;
-    gap: 4px;
+    gap: 6px;
   }
   .legal-app .ftab {
-    font-size: 12.5px;
+    font-size: 12px;
     font-weight: 600;
     color: #6b7280;
-    padding: 6px 12px;
+    padding: 6px 11px;
     border-radius: 999px;
-    border: 1px solid transparent;
-    background: transparent;
+    border: 1px solid #e5e7eb;
+    background: #fff;
     cursor: pointer;
     white-space: nowrap;
     transition:
       background 0.12s,
-      color 0.12s;
+      color 0.12s,
+      border-color 0.12s;
   }
   .legal-app .ftab:hover {
-    background: #f2f4f7;
-    color: #111827;
+    border-color: #d1d5db;
   }
   .legal-app .ftab.on {
     background: #0b2f6e;
     color: #fff;
+    border-color: #0b2f6e;
   }
 
   .legal-app .search-inp {
@@ -1564,30 +1565,30 @@
   .legal-app .rev-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 320px;
-    gap: 20px;
+    gap: 16px;
     align-items: start;
   }
   .legal-app .rev-doc {
-    font-size: 15px;
+    font-size: 14px;
     line-height: 1.95;
     color: #111827;
   }
   .legal-app .rev-meta {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     gap: 24px;
-    padding: 18px 20px;
+    padding: 14px 18px;
   }
   .legal-app .rev-meta .rm-title {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
     letter-spacing: -0.01em;
   }
   .legal-app .rev-meta .rm-sub {
-    font-size: 13px;
+    font-size: 12.5px;
     color: #6b7280;
-    margin-top: 4px;
+    margin-top: 3px;
   }
   .legal-app .rev-meta .rm-right {
     text-align: right;
@@ -1617,36 +1618,36 @@
   }
   .legal-app .lg-fc.sel {
     border-color: #1f6feb;
-    box-shadow: 0 0 0 3px rgba(22, 86, 230, 0.14);
+    box-shadow: 0 0 0 3px rgba(31, 111, 235, 0.12);
   }
   .legal-app .lg-fc-top {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 13px 15px;
+    gap: 9px;
+    padding: 11px 13px;
+    border-bottom: 1px solid #e5e7eb;
   }
   .legal-app .lg-fc-idx {
-    width: 22px;
-    height: 22px;
+    width: 19px;
+    height: 19px;
     border-radius: 50%;
     color: #fff;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
     display: grid;
     place-content: center;
     flex: none;
   }
   .legal-app .lg-fc-ttl {
-    font-weight: 700;
-    font-size: 14.5px;
+    font-weight: 600;
+    font-size: 13.5px;
     flex: 1;
-    letter-spacing: -0.01em;
   }
   .legal-app .lg-fc-body {
-    padding: 0 15px 14px;
+    padding: 11px 13px;
     display: flex;
     flex-direction: column;
-    gap: 11px;
+    gap: 9px;
   }
   .legal-app .lg-fc-tags {
     display: flex;
@@ -1655,16 +1656,18 @@
     flex-wrap: wrap;
   }
   .legal-app .tag-chip {
-    font-size: 11.5px;
+    font-size: 11px;
     font-weight: 600;
     color: #6b7280;
     background: #f2f4f7;
-    padding: 3px 9px;
-    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+    padding: 2px 7px;
+    border-radius: 5px;
+    white-space: nowrap;
   }
   .legal-app .lg-fc-reason {
-    font-size: 13px;
-    line-height: 1.6;
+    font-size: 12.5px;
+    line-height: 1.55;
     color: #111827;
   }
   .legal-app .lg-fc-reason .lbl {
@@ -1673,7 +1676,7 @@
     font-weight: 700;
     letter-spacing: 0.04em;
     display: block;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
   }
   .legal-app .lg-fc-input {
     display: flex;

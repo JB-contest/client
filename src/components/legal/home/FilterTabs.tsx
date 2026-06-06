@@ -5,9 +5,9 @@ import clsx from "clsx";
 export const FILTERS = [
   "전체",
   "검토 필요",
-  "검토 대기",
+  "AI 검증중",
   "수정 요청",
-  "승인 완료",
+  "승인완료",
 ] as const;
 export type FilterLabel = (typeof FILTERS)[number];
 

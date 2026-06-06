@@ -3,26 +3,33 @@
 import { Fragment } from "react";
 import clsx from "clsx";
 import { MousePointerClick } from "lucide-react";
-import { SOURCE } from "@/lib/data";
+import { SOURCE, type SourceSeg } from "@/lib/data";
 
 interface Props {
   active: number | null;
   setActive: (v: number | null) => void;
+  source?: SourceSeg[];
+  errLabel?: string;
 }
 
-export default function SourceDoc({ active, setActive }: Props) {
+export default function SourceDoc({
+  active,
+  setActive,
+  source = SOURCE,
+  errLabel = "오류율 14%",
+}: Props) {
   return (
     <div className="panel">
       <div className="panel-head">
         <div className="panel-title">원문 · 하이라이팅</div>
         <span className="risk risk-high">
           <span className="dot" />
-          오류율 14%
+          {errLabel}
         </span>
       </div>
       <div className="px-[18px] py-4">
         <p className="src-doc">
-          {SOURCE.map((seg, i) => {
+          {source.map((seg, i) => {
             if (!seg.hl) return <Fragment key={i}>{seg.t}</Fragment>;
             const cls = clsx("hl", `hl-${seg.hl}`, active === seg.fb && "active");
             return (

@@ -6,6 +6,9 @@ const config: Config = {
     "./src/components/**/*.{ts,tsx}",
     "./src/lib/**/*.{ts,tsx}",
   ],
+  // 원문 하이라이트는 `hl-${seg.hl}` 로 동적 생성돼 소스에 리터럴이 없어
+  // Tailwind purge 대상이 된다. 위험도 색상 클래스를 안전목록에 고정한다.
+  safelist: ["hl-high", "hl-medium", "hl-low"],
   theme: {
     extend: {
       colors: {

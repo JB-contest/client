@@ -47,7 +47,7 @@ function MarketingSidebar({ onLogout }: SidebarProps) {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/assets/jb-symbol.png" alt="JB" className="w-8 h-8" />
         <div>
-          <div className="font-bold text-sm leading-tight">제이비</div>
+          <div className="font-bold text-sm leading-tight">홍길동</div>
           <div className="text-[11px] text-text-2 mt-[1px]">마케팅팀</div>
         </div>
       </div>
@@ -147,7 +147,7 @@ function LegalSidebar({ onLogout }: SidebarProps) {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/assets/jb-symbol.png" alt="JB" className="w-8 h-8" />
         <div>
-          <div className="font-bold text-sm leading-tight">제이비</div>
+          <div className="font-bold text-sm leading-tight">홍길동</div>
           <div className="text-[11px] text-text-2 mt-[1px]">준법자문가</div>
         </div>
       </div>

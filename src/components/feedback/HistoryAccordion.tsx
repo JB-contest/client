@@ -5,9 +5,13 @@ import clsx from "clsx";
 import { ChevronDown, History } from "lucide-react";
 import Timeline from "@/components/ui/Timeline";
 import { COLOR } from "@/lib/colors";
-import { HISTORY } from "@/lib/data";
+import { HISTORY, type HistoryItem } from "@/lib/data";
 
-export default function HistoryAccordion() {
+export default function HistoryAccordion({
+  history = HISTORY,
+}: {
+  history?: HistoryItem[];
+}) {
   const [open, setOpen] = useState(false);
   return (
     <div className={clsx("acc", open && "open")}>
@@ -27,7 +31,7 @@ export default function HistoryAccordion() {
       </div>
       {open && (
         <div className="acc-body">
-          <Timeline items={HISTORY} />
+          <Timeline items={history} />
         </div>
       )}
     </div>

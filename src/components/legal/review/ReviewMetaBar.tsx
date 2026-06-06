@@ -2,7 +2,7 @@ import type { ReviewData } from "@/lib/legalData";
 
 export default function ReviewMetaBar({ data }: { data: ReviewData }) {
   return (
-    <div className="panel mb-[18px]">
+    <div className="panel mb-4">
       <div className="rev-meta">
         <div>
           <div className="rm-title">{data.title}</div>
@@ -14,7 +14,7 @@ export default function ReviewMetaBar({ data }: { data: ReviewData }) {
           </div>
           <div
             className="num"
-            style={{ fontSize: 12, color: "#9CA3AF", marginTop: 4 }}
+            style={{ fontSize: 11.5, color: "#9CA3AF", marginTop: 3 }}
           >
             {data.sent}
           </div>

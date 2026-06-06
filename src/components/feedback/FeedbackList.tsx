@@ -1,13 +1,14 @@
 "use client";
 
 import FeedbackCard from "./FeedbackCard";
-import { FEEDBACK } from "@/lib/data";
+import { FEEDBACK, type Feedback } from "@/lib/data";
 
 interface Props {
   active: number | null;
   saved: Record<number, boolean>;
   onSelect: (i: number) => void;
   savedCount: number;
+  feedback?: Feedback[];
 }
 
 export default function FeedbackList({
@@ -15,6 +16,7 @@ export default function FeedbackList({
   saved,
   onSelect,
   savedCount,
+  feedback = FEEDBACK,
 }: Props) {
   return (
     <div>
@@ -22,7 +24,7 @@ export default function FeedbackList({
         <div className="text-sm font-semibold">
           피드백{" "}
           <span className="text-text-2 num font-normal">
-            · {FEEDBACK.length}건
+            · {feedback.length}건
           </span>
         </div>
         <div className="text-xs text-text-2 whitespace-nowrap">
@@ -30,11 +32,11 @@ export default function FeedbackList({
           <b className="num text-risk-low">
             {savedCount}
           </b>{" "}
-          / {FEEDBACK.length}
+          / {feedback.length}
         </div>
       </div>
       <div className="flex flex-col gap-2.5">
-        {FEEDBACK.map((fb, i) => (
+        {feedback.map((fb, i) => (
           <FeedbackCard
             key={i}
             fb={fb}
