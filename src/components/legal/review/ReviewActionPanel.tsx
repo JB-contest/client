@@ -1,5 +1,6 @@
 "use client";
 
+import { ShieldCheck } from "lucide-react";
 import { useToast } from "@/components/Toaster";
 
 export interface ReviewActions {
@@ -57,6 +58,7 @@ export default function ReviewActionPanel({ done, total, actions }: Props) {
           검토 진행
         </button>
         <button className="btn btn-primary w-full" onClick={() => approve()}>
+          <ShieldCheck size={16} />
           최종 승인
         </button>
         <button className="btn btn-destructive w-full" onClick={() => reject()}>

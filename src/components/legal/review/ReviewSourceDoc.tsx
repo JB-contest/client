@@ -21,7 +21,7 @@ export default function ReviewSourceDoc({
   return (
     <div className="panel">
       <div className="panel-head">
-        <div className="panel-title">원문</div>
+        <div className="panel-title">원문 · 하이라이팅</div>
         <span className="risk risk-high">
           <span className="dot" />
           위반 의심 {total}건

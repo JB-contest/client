@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 import PageHead from "@/components/PageHead";
 import ReviewActionPanel from "@/components/legal/review/ReviewActionPanel";
 import ReviewFeedbackList from "@/components/legal/review/ReviewFeedbackList";
@@ -120,7 +121,20 @@ export default function LegalReviewPage() {
 
   return (
     <div className="fade-in">
-      <PageHead crumb={["Home", "검토"]} title="검토" />
+      <PageHead
+        crumb={["Home", "검토"]}
+        title="검토"
+        actions={
+          <button
+            type="button"
+            className="btn btn-ghost"
+            onClick={() => router.push(ROUTES.legal.home)}
+          >
+            <ArrowLeft size={16} />
+            목록으로
+          </button>
+        }
+      />
       <ReviewMetaBar data={d} />
 
       <div className="rev-grid">

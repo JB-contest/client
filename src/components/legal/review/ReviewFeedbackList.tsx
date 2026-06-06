@@ -30,7 +30,7 @@ export default function ReviewFeedbackList({
         </div>
         <span className="fb-helper">
           <Info size={14} />
-          해당 카드 선택하면 화면 강조, 자료 수정 가능
+          카드 선택 시 화면 강조 · 코멘트 등록
         </span>
       </div>
       <div className="flex flex-col gap-2.5">
