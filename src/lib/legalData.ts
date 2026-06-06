@@ -108,10 +108,10 @@ export interface HistRow {
 }
 
 export const LEGAL_HOME_KPIS: LegalKpi[] = [
-  { label: "검토 대기", value: "5", unit: "건", foot: { kind: "warn", icon: "clock", text: "오늘 마감 3건" } },
-  { label: "오늘 마감", value: "3", unit: "건", foot: { kind: "warn", icon: "alert-triangle", text: "지연 위험 1건" } },
-  { label: "이번 주 승인", value: "4", unit: "건", foot: { kind: "up", icon: "trending-up", text: "지난주 대비 +1" } },
-  { label: "평균 처리", value: "1.4", unit: "일", foot: { kind: "down", icon: "trending-down", text: "0.3일 단축" } },
+  { label: "검토 대기", value: "5", unit: "건" },
+  { label: "오늘 마감", value: "3", unit: "건" },
+  { label: "이번 주 승인", value: "4", unit: "건" },
+  { label: "평균 처리", value: "1.4", unit: "일" },
 ];
 
 export const LEGAL_PROJECTS: LegalProject[] = [
@@ -206,10 +206,10 @@ export const REVIEW_DATA: ReviewData = {
 };
 
 export const HIST_KPIS: LegalKpi[] = [
-  { label: "총 심의", value: "147", unit: "건", foot: { kind: "up", icon: "trending-up", text: "이번 분기 +38" } },
-  { label: "평균 오류율", value: "11.4", unit: "%", foot: { kind: "down", icon: "trending-down", text: "전분기 대비 2.1%p" } },
-  { label: "평균 처리", value: "1.4", unit: "일", foot: { kind: "down", icon: "trending-down", text: "0.3일 단축" } },
-  { label: "반려율", value: "28", unit: "%", foot: { kind: "flat", icon: "minus", text: "전분기와 동일" } },
+  { label: "총 심의", value: "147", unit: "건" },
+  { label: "평균 오류율", value: "11.4", unit: "%" },
+  { label: "평균 처리", value: "1.4", unit: "일" },
+  { label: "반려율", value: "28", unit: "%" },
 ];
 
 export const VIOLATION_DIST: ViolationItem[] = [
