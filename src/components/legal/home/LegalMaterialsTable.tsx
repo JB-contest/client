@@ -46,7 +46,13 @@ export default function LegalMaterialsTable({
               <td className="text-right">
                 <button
                   className="btn btn-secondary btn-sm"
-                  onClick={() => router.push(ROUTES.legal.review)}
+                  onClick={() =>
+                    router.push(
+                      r.docId != null
+                        ? `${ROUTES.legal.review}?id=${r.docId}`
+                        : ROUTES.legal.review,
+                    )
+                  }
                 >
                   검토 <ArrowRight size={14} />
                 </button>

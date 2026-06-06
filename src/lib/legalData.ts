@@ -49,6 +49,7 @@ export interface LegalMaterial {
   status: LegalStatus;
   err: string;
   errC: "high" | "medium" | "low" | "muted";
+  docId?: number; // 실제 문서 id (API 연결 시). 검토 화면으로 행별 이동에 사용.
 }
 
 export interface ReviewSourceSeg {
@@ -200,7 +201,7 @@ export const REVIEW_DATA: ReviewData = {
     { ev: "AI 6단계 검증 · 오류율 —", actor: "AI Agent", actorCls: "actor-ai", ts: "04.26 10:13", dot: "done" },
     { ev: "검토 · 수정 요청 0건", actor: "준법자문가", actorCls: "actor-rev", ts: "04.26 14:40", dot: "done" },
     { ev: "수정 재업로드 · 재검증 0%", actor: "마케팅팀", actorCls: "actor-mkt", ts: "04.28 09:05", dot: "done" },
-    { ev: "최종 승인 · 심의필 발급", actor: "준법자문가", actorCls: "actor-rev", ts: "대기", dot: "pending" },
+    { ev: "최종 승인", actor: "준법자문가", actorCls: "actor-rev", ts: "대기", dot: "pending" },
   ],
 };
 

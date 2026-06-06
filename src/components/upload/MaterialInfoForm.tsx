@@ -1,4 +1,17 @@
-export default function MaterialInfoForm({ disabled }: { disabled: boolean }) {
+export interface MaterialInfo {
+  name: string;
+  location: string;
+  loanType: string;
+  title: string;
+}
+
+interface Props {
+  disabled: boolean;
+  value: MaterialInfo;
+  onChange: (patch: Partial<MaterialInfo>) => void;
+}
+
+export default function MaterialInfoForm({ disabled, value, onChange }: Props) {
   return (
     <div className="panel p-5">
       <div className="text-sm font-semibold mb-4">자료 정보</div>
@@ -8,13 +21,19 @@ export default function MaterialInfoForm({ disabled }: { disabled: boolean }) {
           <input
             className="input"
             placeholder="자료명을 입력하세요."
-            defaultValue="봄맞이 신용대출 상세페이지"
+            value={value.name}
+            onChange={(e) => onChange({ name: e.target.value })}
             disabled={disabled}
           />
         </div>
         <div className="field">
           <label className="field-label">게재 위치</label>
-          <select className="select" defaultValue="상세페이지" disabled={disabled}>
+          <select
+            className="select"
+            value={value.location}
+            onChange={(e) => onChange({ location: e.target.value })}
+            disabled={disabled}
+          >
             <option>상세페이지</option>
             <option>홈페이지</option>
             <option>카드뉴스</option>
@@ -23,7 +42,12 @@ export default function MaterialInfoForm({ disabled }: { disabled: boolean }) {
         </div>
         <div className="field">
           <label className="field-label">대출 유형</label>
-          <select className="select" defaultValue="신용대출" disabled={disabled}>
+          <select
+            className="select"
+            value={value.loanType}
+            onChange={(e) => onChange({ loanType: e.target.value })}
+            disabled={disabled}
+          >
             <option>신용대출</option>
             <option>담보대출</option>
             <option>전세자금대출</option>
@@ -34,7 +58,8 @@ export default function MaterialInfoForm({ disabled }: { disabled: boolean }) {
           <input
             className="input"
             placeholder="상품명을 입력하세요."
-            defaultValue="JB 봄맞이 직장인 신용대출"
+            value={value.title}
+            onChange={(e) => onChange({ title: e.target.value })}
             disabled={disabled}
           />
         </div>

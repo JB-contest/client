@@ -1,21 +1,34 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import FilterChips, {
   FILTER_MAP,
   type FilterLabel,
 } from "./FilterChips";
 import MaterialsTable from "./MaterialsTable";
-import { MATERIALS } from "@/lib/data";
+import { MATERIALS, type Material } from "@/lib/data";
+import { listDocuments, docToMaterial } from "@/lib/api";
 
 export default function MaterialsPanel() {
   const [filter, setFilter] = useState<FilterLabel>("전체");
+  const [items, setItems] = useState<Material[]>(MATERIALS);
+
+  useEffect(() => {
+    listDocuments()
+      .then((docs) => {
+        if (docs.length) setItems(docs.map(docToMaterial));
+      })
+      .catch(() => {
+        /* 서버 미응답 시 목업 유지 */
+      });
+  }, []);
+
   const rows = useMemo(
     () =>
-      MATERIALS.filter(
+      items.filter(
         (r) => filter === "전체" || r.status === FILTER_MAP[filter],
       ),
-    [filter],
+    [filter, items],
   );
 
   return (
