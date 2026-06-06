@@ -5,3 +5,7 @@ out/
 *.log
 .env*.local
 next-env.d.ts
+*.tsbuildinfo
+
+# Netlify
+.netlify/
