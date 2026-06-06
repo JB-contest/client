@@ -9,8 +9,10 @@ import { ROUTES } from "@/lib/routes";
 
 export default function LegalMaterialsTable({
   rows,
+  loading,
 }: {
   rows: LegalMaterial[];
+  loading?: boolean;
 }) {
   const router = useRouter();
   return (
@@ -28,7 +30,19 @@ export default function LegalMaterialsTable({
           </tr>
         </thead>
         <tbody>
-          {rows.map((r, i) => (
+          {loading && (
+            <tr>
+              <td
+                colSpan={7}
+                className="text-center text-text-3"
+                style={{ padding: "28px 0" }}
+              >
+                불러오는 중…
+              </td>
+            </tr>
+          )}
+          {!loading &&
+            rows.map((r, i) => (
             <tr key={i}>
               <td>
                 <div className="cell-name">{r.name}</div>
@@ -59,7 +73,7 @@ export default function LegalMaterialsTable({
               </td>
             </tr>
           ))}
-          {rows.length === 0 && (
+          {!loading && rows.length === 0 && (
             <tr>
               <td
                 colSpan={7}

@@ -5,7 +5,7 @@ import PageHead from "@/components/PageHead";
 import ArchiveGrid from "@/components/archive/ArchiveGrid";
 import ArchiveToolbar from "@/components/archive/ArchiveToolbar";
 import EmptyState from "@/components/archive/EmptyState";
-import { ARCHIVE, type ArchiveItem } from "@/lib/data";
+import { type ArchiveItem } from "@/lib/data";
 import {
   listApprovals,
   listDocuments,
@@ -25,12 +25,12 @@ export default function ArchivePage() {
   const [q, setQ] = useState("");
   const [type, setType] = useState("");
   const [surface, setSurface] = useState("");
-  const [items, setItems] = useState<ArchiveItem[]>(ARCHIVE);
+  // null = 로딩 중. API 응답(빈 배열 포함)으로 대체한다. 목업 없음.
+  const [items, setItems] = useState<ArchiveItem[] | null>(null);
 
   useEffect(() => {
     Promise.all([listDocuments(), listApprovals()])
       .then(([docs, approvals]) => {
-        if (!approvals.length) return; // 결재 없으면 목업 유지
         const byId = new Map(docs.map((d) => [d.id, d]));
         setItems(
           approvals.map((a) => {
@@ -51,14 +51,13 @@ export default function ArchivePage() {
           }),
         );
       })
-      .catch(() => {
-        /* 서버 미응답 시 목업 유지 */
-      });
+      .catch(() => setItems([]));
   }, []);
 
+  const loading = items === null;
   const list = useMemo(
     () =>
-      items.filter(
+      (items ?? []).filter(
         (a) =>
           (!q ||
             a.name.includes(q) ||
@@ -86,7 +85,15 @@ export default function ArchivePage() {
         setSurface={setSurface}
         total={list.length}
       />
-      {list.length === 0 ? <EmptyState /> : <ArchiveGrid items={list} />}
+      {loading ? (
+        <div className="panel p-14 text-center text-text-3 text-[13.5px]">
+          불러오는 중…
+        </div>
+      ) : list.length === 0 ? (
+        <EmptyState />
+      ) : (
+        <ArchiveGrid items={list} />
+      )}
     </div>
   );
 }

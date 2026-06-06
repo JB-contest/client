@@ -7,7 +7,13 @@ import Pill from "@/components/ui/Pill";
 import type { Material } from "@/lib/data";
 import { ROUTES } from "@/lib/routes";
 
-export default function MaterialsTable({ rows }: { rows: Material[] }) {
+export default function MaterialsTable({
+  rows,
+  loading,
+}: {
+  rows: Material[];
+  loading?: boolean;
+}) {
   const router = useRouter();
 
   return (
@@ -25,7 +31,19 @@ export default function MaterialsTable({ rows }: { rows: Material[] }) {
           </tr>
         </thead>
         <tbody>
-          {rows.map((r, i) => (
+          {loading && (
+            <tr>
+              <td
+                colSpan={7}
+                className="text-center text-text-3"
+                style={{ padding: "28px 0" }}
+              >
+                불러오는 중…
+              </td>
+            </tr>
+          )}
+          {!loading &&
+            rows.map((r, i) => (
             <tr key={i}>
               <td>
                 <div className="font-semibold text-[13.5px]">{r.name}</div>
@@ -56,6 +74,17 @@ export default function MaterialsTable({ rows }: { rows: Material[] }) {
               </td>
             </tr>
           ))}
+          {!loading && rows.length === 0 && (
+            <tr>
+              <td
+                colSpan={7}
+                className="text-center text-text-3"
+                style={{ padding: "28px 0" }}
+              >
+                해당 상태의 자료가 없습니다.
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
     </div>

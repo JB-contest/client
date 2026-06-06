@@ -11,7 +11,6 @@ import MetaBar from "@/components/feedback/MetaBar";
 import ProgressPanel from "@/components/feedback/ProgressPanel";
 import SourceDoc from "@/components/feedback/SourceDoc";
 import { useToast } from "@/components/Toaster";
-import { FEEDBACK } from "@/lib/data";
 import { ROUTES } from "@/lib/routes";
 import {
   buildFeedbackData,
@@ -33,6 +32,7 @@ export default function FeedbackPage() {
   // 수정 대상 문서 — ?id= 가 있으면 해당 문서, 없으면 수정 요청 상태 문서를 자동 선택.
   const [doc, setDoc] = useState<DocumentResponse | null>(null);
   const [data, setData] = useState<FeedbackData | null>(null);
+  const [loading, setLoading] = useState(true);
   const [errLabel, setErrLabel] = useState<string | undefined>(undefined);
 
   useEffect(() => {
@@ -47,7 +47,7 @@ export default function FeedbackPage() {
           target =
             docs.find((d) => d.status === "REVISION_REQUESTED") ?? docs[0];
         }
-        if (!target) return; // 데이터 없으면 목업 유지
+        if (!target) return; // 대상 문서 없음 → 빈 상태
         const [validations, feedbacks] = await Promise.all([
           getValidationResults(target.id),
           listFeedbacks(target.id),
@@ -59,13 +59,14 @@ export default function FeedbackPage() {
           v ? `오류율 ${Math.round(v.errorRate)}%` : "검증 결과 없음",
         );
       } catch {
-        /* 서버 미응답 시 목업 흐름 유지 */
+        /* 서버 미응답 → 빈 상태 */
+      } finally {
+        setLoading(false);
       }
     })();
   }, []);
 
-  // 실데이터가 있으면 그것을, 없으면 목업 피드백을 쓴다.
-  const fbList = data?.feedback ?? FEEDBACK;
+  const fbList = data?.feedback ?? [];
 
   const setDraft = (i: number, v: string) =>
     setDrafts((d) => ({ ...d, [i]: v }));
@@ -97,6 +98,28 @@ export default function FeedbackPage() {
     router.push(ROUTES.marketing.archive);
   };
 
+  if (loading || !data) {
+    return (
+      <div>
+        <PageHead
+          crumb={["Home", "피드백 수정"]}
+          title="피드백 수정"
+          actions={
+            <button
+              className="btn btn-ghost"
+              onClick={() => router.push(ROUTES.marketing.upload)}
+            >
+              <ArrowLeft size={16} />목록으로
+            </button>
+          }
+        />
+        <div className="panel p-14 text-center text-text-3 text-[13.5px]">
+          {loading ? "불러오는 중…" : "수정할 자료가 없습니다."}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <PageHead
@@ -112,7 +135,7 @@ export default function FeedbackPage() {
         }
       />
 
-      <MetaBar data={data?.meta} />
+      <MetaBar data={data.meta} />
 
       <div
         className="grid gap-4 items-start"
@@ -122,7 +145,7 @@ export default function FeedbackPage() {
           <SourceDoc
             active={active}
             setActive={setActive}
-            source={data?.source}
+            source={data.source}
             errLabel={errLabel}
           />
           <FeedbackList
@@ -130,7 +153,7 @@ export default function FeedbackPage() {
             saved={saved}
             savedCount={savedCount}
             onSelect={(i) => setActive(active === i ? null : i)}
-            feedback={data?.feedback}
+            feedback={data.feedback}
           />
         </div>
 
@@ -148,7 +171,7 @@ export default function FeedbackPage() {
             total={fbList.length}
             onSubmit={submitRevision}
           />
-          <HistoryAccordion history={data?.history} />
+          <HistoryAccordion history={data.history} />
         </div>
       </div>
     </div>

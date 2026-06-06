@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import FilterTabs, { type FilterLabel } from "./FilterTabs";
 import LegalMaterialsTable from "./LegalMaterialsTable";
-import { LEGAL_MATERIALS, type LegalMaterial } from "@/lib/legalData";
+import type { LegalMaterial } from "@/lib/legalData";
 import { listDocuments, docToMaterial } from "@/lib/api";
 
 const MATCH: Record<FilterLabel, (r: LegalMaterial) => boolean> = {
@@ -16,32 +16,35 @@ const MATCH: Record<FilterLabel, (r: LegalMaterial) => boolean> = {
 
 export default function LegalMaterialsPanel() {
   const [filter, setFilter] = useState<FilterLabel>("전체");
-  const [items, setItems] = useState<LegalMaterial[]>(LEGAL_MATERIALS);
+  // null = 로딩 중. API 응답(빈 배열 포함)이 오면 그 값으로 대체한다. 목업 없음.
+  const [items, setItems] = useState<LegalMaterial[] | null>(null);
 
   useEffect(() => {
     listDocuments()
-      .then((docs) => {
-        if (docs.length) setItems(docs.map(docToMaterial));
-      })
-      .catch(() => {
-        /* 서버 미응답 시 목업 유지 */
-      });
+      .then((docs) => setItems(docs.map(docToMaterial)))
+      .catch(() => setItems([]));
   }, []);
 
-  const rows = useMemo(() => items.filter(MATCH[filter]), [filter, items]);
+  const loading = items === null;
+  const rows = useMemo(
+    () => (items ?? []).filter(MATCH[filter]),
+    [filter, items],
+  );
 
   return (
     <div className="panel">
       <div className="panel-head">
         <div className="panel-title">
           자료 모아보기{" "}
-          <span className="text-text-2 num text-[13px] font-normal">
-            {rows.length}건
-          </span>
+          {!loading && (
+            <span className="text-text-2 num text-[13px] font-normal">
+              {rows.length}건
+            </span>
+          )}
         </div>
         <FilterTabs value={filter} onChange={setFilter} />
       </div>
-      <LegalMaterialsTable rows={rows} />
+      <LegalMaterialsTable rows={rows} loading={loading} />
     </div>
   );
 }

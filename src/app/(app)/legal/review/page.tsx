@@ -11,7 +11,7 @@ import ReviewMetaBar from "@/components/legal/review/ReviewMetaBar";
 import ReviewSourceDoc from "@/components/legal/review/ReviewSourceDoc";
 import { useToast } from "@/components/Toaster";
 import { ROUTES } from "@/lib/routes";
-import { REVIEW_DATA, type ReviewData } from "@/lib/legalData";
+import { type ReviewData } from "@/lib/legalData";
 import {
   buildReviewData,
   createFeedback,
@@ -27,7 +27,9 @@ import {
 export default function LegalReviewPage() {
   const { toast } = useToast();
   const router = useRouter();
-  const [d, setD] = useState<ReviewData>(REVIEW_DATA);
+  // null = 검토할 자료 없음. loading 중에는 목업 대신 로딩 화면을 보여준다.
+  const [d, setD] = useState<ReviewData | null>(null);
+  const [loading, setLoading] = useState(true);
   const [docId, setDocId] = useState<number | null>(null);
   const [validation, setValidation] = useState<ValidationResultResponse | null>(
     null,
@@ -45,7 +47,7 @@ export default function LegalReviewPage() {
         if (id == null) {
           const docs = await listDocuments();
           const target = pickReviewDoc(docs);
-          if (!target) return; // 데이터 없으면 목업 유지
+          if (!target) return; // 검토 대상 없음 → 빈 상태
           id = target.id;
         }
         const [doc, validations, feedbacks] = await Promise.all([
@@ -58,10 +60,36 @@ export default function LegalReviewPage() {
         setValidation(v ?? null);
         setD(buildReviewData(doc, v, feedbacks));
       } catch {
-        /* 서버 미응답 시 목업 유지 */
+        /* 서버 미응답 → 빈 상태 */
+      } finally {
+        setLoading(false);
       }
     })();
   }, []);
+
+  if (loading || !d) {
+    return (
+      <div className="fade-in">
+        <PageHead
+          crumb={["Home", "검토"]}
+          title="검토"
+          actions={
+            <button
+              type="button"
+              className="btn btn-ghost"
+              onClick={() => router.push(ROUTES.legal.home)}
+            >
+              <ArrowLeft size={16} />
+              목록으로
+            </button>
+          }
+        />
+        <div className="panel p-14 text-center text-text-3 text-[13.5px]">
+          {loading ? "불러오는 중…" : "검토할 자료가 없습니다."}
+        </div>
+      </div>
+    );
+  }
 
   const judge = (i: number) =>
     setJudged((prev) => {
@@ -81,12 +109,16 @@ export default function LegalReviewPage() {
 
   // 이력 타임라인을 로컬에서 갱신한다(API 성공·오프라인 폴백 모두 반영).
   const markReview = () =>
-    setD((prev) => ({
-      ...prev,
-      history: prev.history.map((it) =>
-        it.ev.startsWith("검토") ? { ...it, dot: "done" } : it,
-      ),
-    }));
+    setD((prev) =>
+      prev
+        ? {
+            ...prev,
+            history: prev.history.map((it) =>
+              it.ev.startsWith("검토") ? { ...it, dot: "done" } : it,
+            ),
+          }
+        : prev,
+    );
 
   const actions = {
     onSave: async () => {
