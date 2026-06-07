@@ -54,9 +54,6 @@ export default function ReviewActionPanel({ done, total, actions }: Props) {
         처리
       </div>
       <div className="action-stack">
-        <button className="btn btn-secondary w-full" onClick={() => save()}>
-          검토 진행
-        </button>
         <button className="btn btn-primary w-full" onClick={() => approve()}>
           <ShieldCheck size={16} />
           최종 승인
