@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import clsx from "clsx";
 import { Check, CheckCircle2 } from "lucide-react";
 import Clause from "@/components/ui/Clause";
@@ -22,11 +23,20 @@ export default function FeedbackCard({
   saved,
   onSelect,
 }: Props) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  // 원문 하이라이트 클릭으로 선택되면 해당 카드로 스크롤한다(검토 화면과 동일 동작).
+  useEffect(() => {
+    if (selected)
+      ref.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }, [selected]);
+
   // 좌측 보더 색은 항상 유지(토글 해제·hover 와 무관). 선택 시 나머지 변만 위험도 색으로.
   // border-left 단축과 border-color 를 섞으면 React 가 해제 시 left 색까지 지우므로 longhand 사용.
   const accent = saved ? COLOR.riskLow : RISK_COLOR[fb.risk];
   return (
     <div
+      ref={ref}
       className={clsx("fc", selected && "sel", saved && "saved")}
       onClick={onSelect}
       style={{
