@@ -13,10 +13,10 @@ const BASE = process.env.NEXT_PUBLIC_API_BASE ?? "/backend";
 // 백엔드에 로그인/세션이 없어 POST 시 사용자 id 를 직접 넣어야 한다.
 // 시드된 사용자 기준 기본값 — 환경변수로 덮어쓸 수 있다.
 export const MARKETING_USER_ID = Number(
-  process.env.NEXT_PUBLIC_MARKETING_USER_ID ?? 1,
+  process.env.NEXT_PUBLIC_MARKETING_USER_ID ?? 4,
 );
 export const COMPLIANCE_USER_ID = Number(
-  process.env.NEXT_PUBLIC_COMPLIANCE_USER_ID ?? 2,
+  process.env.NEXT_PUBLIC_COMPLIANCE_USER_ID ?? 5,
 );
 
 // ── enums ─────────────────────────────────────────────────────────────
