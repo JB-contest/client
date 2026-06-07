@@ -35,11 +35,13 @@ export default function UploadPage() {
   const [info, setInfo] = useState<MaterialInfo>(INITIAL_INFO);
   const [done, setDone] = useState(false);
   const [busy, setBusy] = useState(false);
+  // 방금 업로드한 문서 id — "피드백 확인하기" 시 해당 자료로 이동하는 데 쓴다.
+  const [docId, setDocId] = useState<number | null>(null);
 
   const submit = async () => {
     setBusy(true);
     try {
-      await createDocument({
+      const created = await createDocument({
         uploaderId: MARKETING_USER_ID,
         name: info.name,
         uploadLocation: LOCATION_VALUE[info.location] ?? "DETAIL_PAGE",
@@ -47,6 +49,7 @@ export default function UploadPage() {
         title: info.title,
         content: text,
       });
+      setDocId(created.id);
       toast("준법 검토가 접수되었습니다", "success");
       setDone(true);
     } catch {
@@ -62,6 +65,7 @@ export default function UploadPage() {
     setDone(false);
     setText("");
     setInfo(INITIAL_INFO);
+    setDocId(null);
   };
 
   return (
@@ -95,6 +99,7 @@ export default function UploadPage() {
           canSubmit={!!text.trim() && !busy}
           onSubmit={submit}
           onReset={reset}
+          docId={docId}
         />
       </div>
     </div>

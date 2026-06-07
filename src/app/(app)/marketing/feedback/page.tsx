@@ -26,7 +26,8 @@ import {
 export default function FeedbackPage() {
   const router = useRouter();
   const { toast } = useToast();
-  const [active, setActive] = useState<number | null>(0);
+  // 첫 진입 시에는 아무 항목도 강조하지 않는다. 하이라이트/카드를 클릭해야 선택된다.
+  const [active, setActive] = useState<number | null>(null);
   const [saved, setSaved] = useState<Record<number, boolean>>({});
   const [drafts, setDrafts] = useState<Record<number, string>>({});
   // 수정 대상 문서 — ?id= 가 있으면 해당 문서, 없으면 수정 요청 상태 문서를 자동 선택.
