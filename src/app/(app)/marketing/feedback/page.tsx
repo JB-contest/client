@@ -29,7 +29,6 @@ export default function FeedbackPage() {
   const [active, setActive] = useState<number | null>(null);
   const [saved, setSaved] = useState<Record<number, boolean>>({});
   const [content, setContent] = useState("");
-  // 수정 대상 문서 — ?id= 가 있으면 해당 문서, 없으면 수정 요청 상태 문서를 자동 선택.
   const [doc, setDoc] = useState<DocumentResponse | null>(null);
   const [data, setData] = useState<FeedbackData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -47,7 +46,7 @@ export default function FeedbackPage() {
           target =
             docs.find((d) => d.status === "REVISION_REQUESTED") ?? docs[0];
         }
-        if (!target) return; // 대상 문서 없음 → 빈 상태
+        if (!target) return;
         const [validations, feedbacks] = await Promise.all([
           getValidationResults(target.id),
           listFeedbacks(target.id),
@@ -60,7 +59,6 @@ export default function FeedbackPage() {
           v ? `오류율 ${Math.round(v.errorRate)}%` : "검증 결과 없음",
         );
       } catch {
-        /* 서버 미응답 → 빈 상태 */
       } finally {
         setLoading(false);
       }
