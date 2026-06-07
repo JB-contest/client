@@ -7,7 +7,6 @@ import {
   MousePointerClick,
   Save,
   ShieldCheck,
-  Sparkles,
 } from "lucide-react";
 import RiskBadge from "@/components/ui/RiskBadge";
 import { COLOR } from "@/lib/colors";
@@ -16,8 +15,8 @@ import type { Feedback } from "@/lib/data";
 interface Props {
   active: number | null;
   fb: Feedback | null;
-  draft: string;
-  setDraft: (i: number, v: string) => void;
+  content: string;
+  setContent: (v: string) => void;
   saved: boolean;
   onSave: (i: number) => void;
 }
@@ -25,8 +24,8 @@ interface Props {
 export default function EditPanel({
   active,
   fb,
-  draft,
-  setDraft,
+  content,
+  setContent,
   saved,
   onSave,
 }: Props) {
@@ -89,24 +88,15 @@ export default function EditPanel({
 
         <div className="flex items-center justify-between my-4 mb-1.5 mt-4">
           <div className="text-[11px] font-bold text-text-3 tracking-[0.04em]">
-            수정 문구
+            원문 수정
           </div>
-          {fb.suggest && (
-            <button
-              className="btn btn-ghost btn-sm"
-              style={{ height: 26, color: "#0EA5E9" }}
-              onClick={() => setDraft(active, fb.suggest)}
-            >
-              <Sparkles size={13} />AI 제안 반영
-            </button>
-          )}
         </div>
         <textarea
           className="textarea"
-          style={{ minHeight: 150, fontSize: 13.5, lineHeight: 1.65 }}
+          style={{ minHeight: 240, fontSize: 13.5, lineHeight: 1.65 }}
           placeholder="규정에 맞는 수정 문구를 입력하세요."
-          value={draft || ""}
-          onChange={(e) => setDraft(active, e.target.value)}
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
         />
 
         <div className="flex items-center justify-between mt-3">
@@ -118,7 +108,7 @@ export default function EditPanel({
           </span>
           <button
             className="btn btn-primary btn-sm"
-            disabled={!draft || !draft.trim()}
+            disabled={!content.trim()}
             onClick={() => onSave(active)}
           >
             <Save size={14} />저장

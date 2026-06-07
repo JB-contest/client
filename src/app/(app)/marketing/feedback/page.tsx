@@ -29,7 +29,8 @@ export default function FeedbackPage() {
   // 첫 진입 시에는 아무 항목도 강조하지 않는다. 하이라이트/카드를 클릭해야 선택된다.
   const [active, setActive] = useState<number | null>(null);
   const [saved, setSaved] = useState<Record<number, boolean>>({});
-  const [drafts, setDrafts] = useState<Record<number, string>>({});
+  // 문서 원문 전체. 카드 선택과 무관하게 공유되는 단일 편집 대상.
+  const [content, setContent] = useState("");
   // 수정 대상 문서 — ?id= 가 있으면 해당 문서, 없으면 수정 요청 상태 문서를 자동 선택.
   const [doc, setDoc] = useState<DocumentResponse | null>(null);
   const [data, setData] = useState<FeedbackData | null>(null);
@@ -55,6 +56,7 @@ export default function FeedbackPage() {
         ]);
         const v = validations[validations.length - 1];
         setDoc(target);
+        setContent(target.content); // 가장 최근 저장된 원문을 편집 영역에 채운다.
         setData(buildFeedbackData(target, v, feedbacks));
         setErrLabel(
           v ? `오류율 ${Math.round(v.errorRate)}%` : "검증 결과 없음",
@@ -69,22 +71,15 @@ export default function FeedbackPage() {
 
   const fbList = data?.feedback ?? [];
 
-  const setDraft = (i: number, v: string) =>
-    setDrafts((d) => ({ ...d, [i]: v }));
   const onSave = (i: number) => {
     setSaved((s) => ({ ...s, [i]: true }));
-    toast("수정 사항이 저장되었습니다", "success");
+    toast("해당 항목이 저장되었습니다", "success");
   };
   const savedCount = Object.values(saved).filter(Boolean).length;
 
   const submitRevision = async () => {
     if (doc) {
-      // 저장한 수정 문구를 원문에 반영해 새 버전 content 를 만든다.
-      let content = doc.content;
-      fbList.forEach((f, i) => {
-        const d = drafts[i];
-        if (d && d.trim()) content = content.split(f.title).join(d.trim());
-      });
+      // 편집 영역에서 직접 수정한 원문 전체를 새 버전 content 로 제출한다.
       // parentId·version 은 서버가 자동 설정한다.
       await createRevision(doc.id, {
         uploaderId: doc.uploaderId,
@@ -162,16 +157,12 @@ export default function FeedbackPage() {
           <EditPanel
             active={active}
             fb={active !== null ? (fbList[active] ?? null) : null}
-            draft={active !== null ? drafts[active] || "" : ""}
-            setDraft={setDraft}
+            content={content}
+            setContent={setContent}
             saved={active !== null ? !!saved[active] : false}
             onSave={onSave}
           />
-          <ProgressPanel
-            savedCount={savedCount}
-            total={fbList.length}
-            onSubmit={submitRevision}
-          />
+          <ProgressPanel onSubmit={submitRevision} />
           <HistoryAccordion history={data.history} />
         </div>
       </div>

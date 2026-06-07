@@ -387,8 +387,6 @@ export function buildReviewData(
   };
 }
 
-// 준법자문가 코멘트는 '["필수항목 누락"] · ["대부업법 제6조"]' 처럼 JSON 배열 토큰을
-// 포함할 수 있다. 사람이 읽을 수 있도록 배열 토큰만 풀어 준다.
 function cleanComment(c: string): string {
   if (!c) return "";
   return c.replace(/\[(.*?)\]/g, (_, inner) => {
@@ -433,10 +431,7 @@ export function buildFeedbackData(
   const feedback: Feedback[] = ranked.map(({ v, risk }) => {
     const tags = parseList(v.violationTypes);
     const laws = parseList(v.lawMappings);
-    // 준법자문가가 검토 화면에서 등록한 피드백 코멘트(위반문구별). 마케팅 화면에서
-    // '준법자문가 피드백'으로 보여 준다. 위반 사유(reason)는 AI 검증 사유로 분리한다.
-    // 사람이 등록하지 않은 항목은 위반유형·법령 JSON(['...'] · ['...']) 자동 문구로 채워져
-    // 오는데, 이는 진짜 코멘트가 아니므로 빈 값으로 취급한다.
+
     const raw = commentByViolation.get(v.id);
     const isAuto = raw ? /\[\s*".*?"\s*\]/.test(raw) : false;
     const reviewComment = raw && !isAuto ? cleanComment(raw) : "";
@@ -455,7 +450,7 @@ export function buildFeedbackData(
       tag: tags[0] ?? "",
       clause: laws.join(", "),
       reason,
-      reviewComment,
+      reviewComment: raw ? cleanComment(raw) : "",
       suggest: "", // 백엔드에 AI 제안 문구 필드가 없어 비워 둔다.
     };
   });
