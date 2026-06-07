@@ -654,6 +654,9 @@
     line-height: 1.6;
     color: #374151;
   }
+  .edit-review-empty {
+    color: #9ca3af;
+  }
   .save-state {
     display: flex;
     align-items: center;

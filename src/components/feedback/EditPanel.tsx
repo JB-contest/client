@@ -73,15 +73,19 @@ export default function EditPanel({
           <span className="strike">{fb.title}</span> — {fb.tag}
         </div>
 
-        {fb.reviewComment && (
-          <div className="edit-review">
-            <div className="edit-review-head">
-              <ShieldCheck size={13} />
-              준법자문가 피드백
-            </div>
-            <div className="edit-review-body">{fb.reviewComment}</div>
+        <div className="edit-review">
+          <div className="edit-review-head">
+            <ShieldCheck size={13} />
+            준법자문가 피드백
           </div>
-        )}
+          {fb.reviewComment ? (
+            <div className="edit-review-body">{fb.reviewComment}</div>
+          ) : (
+            <div className="edit-review-body edit-review-empty">
+              등록된 준법자문가 피드백이 없습니다.
+            </div>
+          )}
+        </div>
 
         <div className="flex items-center justify-between my-4 mb-1.5 mt-4">
           <div className="text-[11px] font-bold text-text-3 tracking-[0.04em]">
