@@ -69,7 +69,8 @@ export default function EditPanel({
           원문 표현
         </div>
         <div className="edit-orig">
-          <span className="strike">{fb.title}</span> — {fb.tag}
+          <span className="strike">{fb.title.match(/"[^"]*"/)?.[0] ?? fb.title}</span>
+          {fb.tag && ` — ${fb.tag}`}
         </div>
 
         <div className="edit-review">
