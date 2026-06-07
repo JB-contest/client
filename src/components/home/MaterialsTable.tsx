@@ -65,7 +65,11 @@ export default function MaterialsTable({
               <td className="text-text-2">{r.surface}</td>
               <td>{r.type}</td>
               <td>
-                <Pill status={r.status} />
+                {r.isLatest === false ? (
+                  <span className="older-tag"></span>
+                ) : (
+                  <Pill status={r.status} />
+                )}
               </td>
               <td>
                 <ErrCell v={r.err} c={r.errC} />

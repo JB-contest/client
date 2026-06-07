@@ -64,7 +64,11 @@ export default function LegalMaterialsTable({
               <td className="text-text-2">{r.surface}</td>
               <td className="font-medium">{r.type}</td>
               <td>
-                <LegalPill status={r.status} />
+                {r.isLatest === false ? (
+                  <span className="older-tag"></span>
+                ) : (
+                  <LegalPill status={r.status} />
+                )}
               </td>
               <td>
                 <ErrCell v={r.err} c={r.errC} />

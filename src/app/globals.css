@@ -336,7 +336,7 @@
   .table tbody tr:last-child td {
     border-bottom: none;
   }
-  
+
   .table tbody tr.is-older {
     background: #fbfcfd;
   }
