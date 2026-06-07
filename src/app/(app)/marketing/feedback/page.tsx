@@ -158,11 +158,7 @@ export default function FeedbackPage() {
             saved={active !== null ? !!saved[active] : false}
             onSave={onSave}
           />
-          <ProgressPanel
-            savedCount={savedCount}
-            total={fbList.length}
-            onSubmit={submitRevision}
-          />
+          <ProgressPanel onSubmit={submitRevision} />
           <HistoryAccordion history={data.history} />
         </div>
       </div>
