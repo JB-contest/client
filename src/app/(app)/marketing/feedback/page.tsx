@@ -96,7 +96,7 @@ export default function FeedbackPage() {
       }).catch(() => {});
     }
     toast("수정본 재검증을 요청했습니다", "success");
-    router.push(ROUTES.marketing.archive);
+    router.push(ROUTES.marketing.home);
   };
 
   if (loading || !data) {
