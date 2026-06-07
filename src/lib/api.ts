@@ -316,7 +316,11 @@ export function buildReviewData(
     const tags = parseList(v.violationTypes);
     const laws = parseList(v.lawMappings);
     return {
-      title: v.violationText,
+      title: tags.length
+        ? v.violationText && v.violationText !== tags.join(", ")
+          ? `${tags.join(", ")} - "${v.violationText}"`
+          : tags.join(", ")
+        : v.violationText,
       risk,
       hl: risk,
       tags,
@@ -427,7 +431,11 @@ export function buildFeedbackData(
           ? `${tags.join(", ")}에 해당합니다.${laws.length ? ` (${laws.join(", ")})` : ""}`
           : laws.join(", "));
     return {
-      title: v.violationText,
+      title: tags.length
+        ? v.violationText && v.violationText !== tags.join(", ")
+          ? `${tags.join(", ")} - "${v.violationText}"`
+          : tags.join(", ")
+        : v.violationText,
       risk,
       tag: tags[0] ?? "",
       clause: laws.join(", "),
