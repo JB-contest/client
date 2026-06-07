@@ -65,7 +65,9 @@ export default function MaterialsTable({
                     router.push(
                       r.status === "approved"
                         ? ROUTES.marketing.archive
-                        : ROUTES.marketing.feedback,
+                        : r.docId != null
+                          ? `${ROUTES.marketing.feedback}?id=${r.docId}`
+                          : ROUTES.marketing.feedback,
                     )
                   }
                 >
