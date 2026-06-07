@@ -1,6 +1,5 @@
 // 준법자문가 (Compliance advisor) workspace mock data.
 
-import { COLOR } from "./colors";
 import { STATUS_MAP, type RiskLevel } from "./data";
 
 export type LegalStatus =
@@ -115,32 +114,6 @@ export const LEGAL_HOME_KPIS: LegalKpi[] = [
   { label: "평균 처리", value: "1.4", unit: "일" },
 ];
 
-export const LEGAL_PROJECTS: LegalProject[] = [
-  {
-    name: "봄맞이 대출 통합 캠페인",
-    date: "2026.04.04 – 06.30",
-    type: "신용대출",
-    count: "소재 4건",
-    pipeline: [
-      { label: "검토 대기", n: 1, color: COLOR.riskHigh },
-      { label: "AI 검증중", n: 1, color: COLOR.info },
-      { label: "수정 요청", n: 1, color: COLOR.riskMedium },
-      { label: "승인 완료", n: 1, color: COLOR.riskLow },
-    ],
-  },
-  {
-    name: "비상금 대출 카드뉴스",
-    date: "2026.04.10 – 05.18",
-    type: "신용대출",
-    count: "소재 4건",
-    pipeline: [
-      { label: "검토 대기", n: 2, color: COLOR.riskHigh },
-      { label: "AI 검증중", n: 0, color: COLOR.info },
-      { label: "수정 요청", n: 1, color: COLOR.riskMedium },
-      { label: "승인 완료", n: 1, color: COLOR.riskLow },
-    ],
-  },
-];
 
 export const LEGAL_MATERIALS: LegalMaterial[] = [
   { name: "봄맞이 신용대출 상세페이지", camp: "봄맞이 대출 통합 캠페인", id: "SM-2026-0427", surface: "홈페이지", type: "신용대출", status: "approved", err: "14%", errC: "low" },
@@ -205,41 +178,6 @@ export const REVIEW_DATA: ReviewData = {
     { ev: "최종 승인", actor: "준법자문가", actorCls: "actor-rev", ts: "대기", dot: "pending" },
   ],
 };
-
-export const HIST_KPIS: LegalKpi[] = [
-  { label: "총 심의", value: "147", unit: "건" },
-  { label: "평균 오류율", value: "11.4", unit: "%" },
-  { label: "평균 처리", value: "1.4", unit: "일" },
-  { label: "반려율", value: "28", unit: "%" },
-];
-
-export const VIOLATION_DIST: ViolationItem[] = [
-  { label: "과장·단정 표현", pct: 28 },
-  { label: "근거 없는 최상급", pct: 24 },
-  { label: "오인유발 한도", pct: 19 },
-  { label: "필수 고지 누락", pct: 17 },
-  { label: "조건 누락 혜택", pct: 12 },
-];
-
-export const LOAN_DIST: LoanDistItem[] = [
-  { label: "신용대출", n: 68, color: COLOR.jbNavy },
-  { label: "담보대출", n: 54, color: COLOR.jbBlue },
-  { label: "정책금융", n: 25, color: COLOR.info },
-];
-
-export const HIST_ROWS: HistRow[] = [
-  { id: "SM-2026-0427", name: "봄맞이 신용대출 상세페이지", type: "신용대출", result: "approved", before: "14%", after: "0%", date: "2026.05.28", cert: "2026-0428-A" },
-  { id: "SM-2026-0426", name: "봄맞이 신용대출 메인배너", type: "담보대출", result: "approved", before: "18%", after: "0%", date: "2026.05.28", cert: "2026-0428-B" },
-  { id: "SM-2026-0420", name: "전세자금대출 안내 배너", type: "담보대출", result: "rejected", before: "31%", after: null, date: "2026.05.27", cert: null },
-  { id: "SM-2026-0418", name: "직장인 마이너스 통장 안내", type: "신용대출", result: "rejected", before: "29%", after: null, date: "2026.05.26", cert: null },
-  { id: "SM-2026-0430", name: "직장인 신용대출 배너", type: "신용대출", result: "revising", before: "9%", after: null, date: "—", cert: null },
-  { id: "SM-2026-0438", name: "사잇돌 중금리 안내", type: "정책금융", result: "revising", before: "11%", after: null, date: "—", cert: null },
-  { id: "SM-2026-0415", name: "사잇돌 중금리 카드뉴스", type: "정책금융", result: "approved", before: "12%", after: "0%", date: "2026.05.22", cert: "2026-0422-A" },
-  { id: "SM-2026-0411", name: "햇살론 정책금융 카드", type: "정책금융", result: "approved", before: "8%", after: "0%", date: "2026.05.20", cert: "2026-0420-C" },
-  { id: "SM-2026-0409", name: "주택담보 갈아타기 상세", type: "담보대출", result: "approved", before: "16%", after: "0%", date: "2026.05.18", cert: "2026-0418-A" },
-  { id: "SM-2026-0405", name: "아파트 담보대출 카드", type: "담보대출", result: "rejected", before: "24%", after: null, date: "2026.05.15", cert: null },
-  { id: "SM-2026-0402", name: "전세자금대출 FAQ", type: "담보대출", result: "approved", before: "6%", after: "0%", date: "2026.05.12", cert: "2026-0412-A" },
-];
 
 export const LEGAL_STATUS_MAP: Record<LegalStatus, { cls: string; label: string }> = {
   ...STATUS_MAP,

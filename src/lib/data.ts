@@ -81,35 +81,6 @@ export const KPIS: Kpi[] = [
   { label: "승인 완료", value: "36", unit: "건" },
 ];
 
-export const PROJECTS: Project[] = [
-  {
-    name: "봄맞이 대출 통합 캠페인",
-    date: "2026.04.04 – 06",
-    type: "신용대출",
-    count: "소재 4건",
-    pct: 62,
-    stats: [
-      ["검토 대기", "1"],
-      ["AI 검증중", "1"],
-      ["수정 요청", "1"],
-      ["승인 완료", "1"],
-    ],
-  },
-  {
-    name: "비상금 대출 카드뉴스",
-    date: "2026.04.10 – 18",
-    type: "신용대출",
-    count: "소재 3건",
-    pct: 35,
-    stats: [
-      ["검토 대기", "2"],
-      ["AI 검증중", "0"],
-      ["수정 요청", "1"],
-      ["승인 완료", "0"],
-    ],
-  },
-];
-
 export const MATERIALS: Material[] = [
   { name: "봄맞이 신용대출 상세페이지", camp: "봄맞이 대출 통합 캠페인", id: "SM-2026-0428", surface: "상세페이지", type: "신용대출", status: "revise", err: "14%", errC: "high" },
   { name: "직장인 신용대출 배너", camp: "봄맞이 대출 통합 캠페인", id: "SM-2026-0430", surface: "홈페이지", type: "신용대출", status: "ai", err: "—", errC: "muted" },

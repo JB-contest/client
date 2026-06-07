@@ -1,7 +1,7 @@
-import { LOAN_DIST } from "@/lib/legalData";
+import type { LoanDistItem } from "@/lib/legalData";
 
-export default function LoanDist() {
-  const total = LOAN_DIST.reduce((s, x) => s + x.n, 0);
+export default function LoanDist({ items }: { items: LoanDistItem[] }) {
+  const total = items.reduce((s, x) => s + x.n, 0);
   return (
     <div className="panel">
       <div className="panel-head">
@@ -10,7 +10,10 @@ export default function LoanDist() {
       </div>
       <div style={{ padding: "8px 22px 14px" }}>
         <div className="loan-list">
-          {LOAN_DIST.map((l) => (
+          {items.length === 0 && (
+            <div className="text-text-3 text-[13px] py-2">집계된 심의가 없습니다.</div>
+          )}
+          {items.map((l) => (
             <div className="loan-row" key={l.label}>
               <span className="ln">
                 <span className="d" style={{ background: l.color }} />

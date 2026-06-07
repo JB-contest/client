@@ -3,10 +3,21 @@ import type {
   HistoryItem,
   Material,
   MaterialStatus,
+  Project,
   RiskLevel,
   SourceSeg,
 } from "@/lib/data";
-import type { ReviewData, ReviewFeedback, ReviewSourceSeg } from "@/lib/legalData";
+import type {
+  HistRow,
+  LegalKpi,
+  LegalProject,
+  LoanDistItem,
+  ReviewData,
+  ReviewFeedback,
+  ReviewSourceSeg,
+  ViolationItem,
+} from "@/lib/legalData";
+import { COLOR } from "@/lib/colors";
 
 const BASE = process.env.NEXT_PUBLIC_API_BASE ?? "/backend";
 
@@ -450,7 +461,7 @@ export function buildFeedbackData(
       tag: tags[0] ?? "",
       clause: laws.join(", "),
       reason,
-      reviewComment: raw ? cleanComment(raw) : "",
+      reviewComment,
       suggest: "", // 백엔드에 AI 제안 문구 필드가 없어 비워 둔다.
     };
   });
@@ -497,6 +508,239 @@ export function buildFeedbackData(
       },
     ],
   };
+}
+
+// ── 프로젝트 한눈에 (심의 현황 · 마케팅/준법 공통) ────────────────────
+// 문서의 title 을 프로젝트 제목으로 보고 묶는다. 같은 소재(name)의 여러 버전은
+// 최신 버전만 현재 상태로 집계하며, 승인되지 않은 소재가 남은(진행 중) 프로젝트만 남긴다.
+interface ProjectAgg {
+  title: string;
+  count: number;
+  type: string;
+  date: string;
+  bucket: { waiting: number; ai: number; revise: number; approved: number };
+}
+
+function aggregateProjects(docs: DocumentResponse[]): ProjectAgg[] {
+  const byId = new Map(docs.map((d) => [d.id, d]));
+  // 한 소재는 parentId 체인으로 이어진 버전들의 묶음이다. 최상위 부모 id 를 소재 키로 쓴다.
+  const rootId = (d: DocumentResponse): number => {
+    let cur = d;
+    const seen = new Set<number>();
+    while (cur.parentId != null && byId.has(cur.parentId) && !seen.has(cur.id)) {
+      seen.add(cur.id);
+      cur = byId.get(cur.parentId)!;
+    }
+    return cur.id;
+  };
+
+  // 소재(부모 체인)별 최신 버전만 현재 상태로 집계한다.
+  const familyLatest = new Map<number, DocumentResponse>();
+  docs.forEach((d) => {
+    const r = rootId(d);
+    const cur = familyLatest.get(r);
+    if (!cur || d.version > cur.version) familyLatest.set(r, d);
+  });
+
+  // 프로젝트(title) 단위로 묶기. 기간은 해당 title 의 모든 문서 기준.
+  const byTitleMaterials = new Map<string, DocumentResponse[]>();
+  familyLatest.forEach((d) => {
+    const arr = byTitleMaterials.get(d.title) ?? [];
+    arr.push(d);
+    byTitleMaterials.set(d.title, arr);
+  });
+  const byTitleAll = new Map<string, DocumentResponse[]>();
+  docs.forEach((d) => {
+    const arr = byTitleAll.get(d.title) ?? [];
+    arr.push(d);
+    byTitleAll.set(d.title, arr);
+  });
+
+  const aggs: ProjectAgg[] = [];
+  byTitleMaterials.forEach((materials, title) => {
+    const bucket = { waiting: 0, ai: 0, revise: 0, approved: 0 };
+    materials.forEach((d) => {
+      if (d.status === "IN_REVIEW") bucket.waiting += 1;
+      else if (d.status === "REVISION_REQUESTED") bucket.revise += 1;
+      else if (d.status === "APPROVED") bucket.approved += 1;
+      else bucket.ai += 1; // SUBMITTED, AI_VALIDATING
+    });
+
+    // 모든 소재가 승인된 프로젝트는 진행 중이 아니므로 제외.
+    if (bucket.approved === materials.length) return;
+
+    const typeCount = new Map<LoanType, number>();
+    materials.forEach((d) =>
+      typeCount.set(d.loanType, (typeCount.get(d.loanType) ?? 0) + 1),
+    );
+    const topType = [...typeCount.entries()].sort((a, b) => b[1] - a[1])[0]?.[0];
+
+    const fmt = (s?: string) => (s ? s.slice(0, 10).replace(/-/g, ".") : "");
+    const all = byTitleAll.get(title) ?? [];
+    const created = all.map((d) => d.createdAt).filter(Boolean).sort();
+    const updated = all.map((d) => d.updatedAt).filter(Boolean).sort();
+    const date = created.length
+      ? `${fmt(created[0])} – ${fmt(updated[updated.length - 1])}`
+      : "";
+
+    aggs.push({
+      title,
+      count: materials.length,
+      type: topType ? (LOAN_TYPE_LABEL[topType] ?? topType) : "",
+      date,
+      bucket,
+    });
+  });
+
+  return aggs;
+}
+
+// 준법자문가 심의 현황용 — pipeline(라벨·건수·색) 형태.
+export function buildLegalProjects(docs: DocumentResponse[]): LegalProject[] {
+  return aggregateProjects(docs).map((a) => ({
+    name: a.title,
+    date: a.date,
+    type: a.type,
+    count: `소재 ${a.count}건`,
+    pipeline: [
+      { label: "검토 대기", n: a.bucket.waiting, color: COLOR.riskHigh },
+      { label: "AI 검증중", n: a.bucket.ai, color: COLOR.info },
+      { label: "수정 요청", n: a.bucket.revise, color: COLOR.riskMedium },
+      { label: "승인 완료", n: a.bucket.approved, color: COLOR.riskLow },
+    ],
+  }));
+}
+
+// 마케팅 심의 현황용 — 진행률(pct) + 상태별 통계(stats) 형태.
+export function buildMarketingProjects(docs: DocumentResponse[]): Project[] {
+  return aggregateProjects(docs).map((a) => ({
+    name: a.title,
+    date: a.date,
+    type: a.type,
+    count: `소재 ${a.count}건`,
+    pct: a.count ? Math.round((a.bucket.approved / a.count) * 100) : 0,
+    stats: [
+      ["검토 대기", String(a.bucket.waiting)],
+      ["AI 검증중", String(a.bucket.ai)],
+      ["수정 요청", String(a.bucket.revise)],
+      ["승인 완료", String(a.bucket.approved)],
+    ],
+  }));
+}
+
+// ── 심의 이력 화면 ────────────────────────────────────────────────────
+export interface HistoryData {
+  kpis: LegalKpi[];
+  violationDist: ViolationItem[];
+  loanDist: LoanDistItem[];
+  rows: HistRow[];
+}
+
+const LOAN_DIST_COLOR: Record<LoanType, string> = {
+  CREDIT_LOAN: COLOR.jbNavy,
+  COLLATERAL_LOAN: COLOR.jbBlue,
+  JEONSE_LOAN: COLOR.info,
+};
+
+export function buildHistoryData(
+  docs: DocumentResponse[],
+  approvals: ApprovalResponse[],
+  validationsByDoc: Map<number, ValidationResultResponse[]>,
+): HistoryData {
+  const approvalByDoc = new Map<number, ApprovalResponse>();
+  approvals.forEach((a) => approvalByDoc.set(a.documentId, a));
+
+  // 처리(승인/수정 요청)가 끝난 문서만 이력에 포함한다.
+  const processed = docs.filter(
+    (d) => d.status === "APPROVED" || d.status === "REVISION_REQUESTED",
+  );
+
+  const rows: HistRow[] = processed.map((d) => {
+    const validations = validationsByDoc.get(d.id) ?? [];
+    const latest = validations[validations.length - 1];
+    const beforeNum = latest ? Math.round(latest.errorRate) : 0;
+    const approved = d.status === "APPROVED";
+    const approval = approvalByDoc.get(d.id);
+    return {
+      id: `#${d.id}${d.version > 1 ? ` v${d.version}` : ""}`,
+      name: d.name,
+      type: LOAN_TYPE_LABEL[d.loanType] ?? d.loanType,
+      result: approved ? "approved" : "revising",
+      before: `${beforeNum}%`,
+      after: approved ? "0%" : null,
+      date: approved
+        ? ((approval?.approvedAt ?? d.updatedAt)?.slice(0, 10).replace(/-/g, ".") ??
+          "—")
+        : "—",
+      cert: approval?.reviewNumber ?? null,
+    };
+  });
+
+  // KPI
+  const total = rows.length;
+  const errAvg = total
+    ? rows.reduce((s, r) => s + parseFloat(r.before), 0) / total
+    : 0;
+  const revisingCount = rows.filter((r) => r.result === "revising").length;
+  const rejectRate = total ? Math.round((revisingCount / total) * 100) : 0;
+
+  // 평균 처리일 — 승인 문서의 (승인일 − 생성일) 평균.
+  const days = processed
+    .filter((d) => d.status === "APPROVED")
+    .map((d) => {
+      const a = approvalByDoc.get(d.id);
+      if (!a) return null;
+      const diff =
+        (new Date(a.approvedAt).getTime() - new Date(d.createdAt).getTime()) /
+        86400000;
+      return diff >= 0 ? diff : null;
+    })
+    .filter((x): x is number => x != null);
+  const avgDays = days.length
+    ? days.reduce((s, x) => s + x, 0) / days.length
+    : 0;
+
+  const round1 = (n: number) => (Math.round(n * 10) / 10).toString();
+  const kpis: LegalKpi[] = [
+    { label: "총 심의", value: String(total), unit: "건" },
+    { label: "평균 오류율", value: round1(errAvg), unit: "%" },
+    { label: "평균 처리", value: round1(avgDays), unit: "일" },
+    { label: "반려율", value: String(rejectRate), unit: "%" },
+  ];
+
+  // 위반 유형 분포 — 처리 문서의 모든 위반 항목 violationTypes 집계 후 상위 5개.
+  const typeCount = new Map<string, number>();
+  let totalViolations = 0;
+  processed.forEach((d) => {
+    (validationsByDoc.get(d.id) ?? []).forEach((vr) =>
+      vr.violations.forEach((v) =>
+        parseList(v.violationTypes).forEach((t) => {
+          typeCount.set(t, (typeCount.get(t) ?? 0) + 1);
+          totalViolations += 1;
+        }),
+      ),
+    );
+  });
+  const violationDist: ViolationItem[] = [...typeCount.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([label, n]) => ({
+      label,
+      pct: totalViolations ? Math.round((n / totalViolations) * 100) : 0,
+    }));
+
+  // 대출유형별 심의 건수.
+  const loanCount = new Map<LoanType, number>();
+  processed.forEach((d) =>
+    loanCount.set(d.loanType, (loanCount.get(d.loanType) ?? 0) + 1),
+  );
+  const loanDist: LoanDistItem[] = [...loanCount.entries()].map(([lt, n]) => ({
+    label: LOAN_TYPE_LABEL[lt] ?? lt,
+    n,
+    color: LOAN_DIST_COLOR[lt] ?? COLOR.info,
+  }));
+
+  return { kpis, violationDist, loanDist, rows };
 }
 
 // 검토 화면이 보여줄 문서 한 건을 고른다(검토 대상 우선, 없으면 첫 문서).
