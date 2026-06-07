@@ -108,7 +108,7 @@ export default function FeedbackPage() {
           actions={
             <button
               className="btn btn-ghost"
-              onClick={() => router.push(ROUTES.marketing.upload)}
+              onClick={() => router.push(ROUTES.marketing.home)}
             >
               <ArrowLeft size={16} />목록으로
             </button>
@@ -129,7 +129,7 @@ export default function FeedbackPage() {
         actions={
           <button
             className="btn btn-ghost"
-            onClick={() => router.push(ROUTES.marketing.upload)}
+            onClick={() => router.push(ROUTES.marketing.home)}
           >
             <ArrowLeft size={16} />목록으로
           </button>
