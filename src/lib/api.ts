@@ -295,6 +295,15 @@ function buildSource(
   return segs.length ? segs : [{ t: content }];
 }
 
+// 피드백 목록은 서버에서 최신순(내림차순)으로 올 수도, 오래된순으로 올 수도 있다.
+// 배열 위치에 의존하지 않고 createdAt 기준으로 가장 최근 피드백을 고른다.
+function latestFeedback(
+  feedbacks: FeedbackResponse[],
+): FeedbackResponse | undefined {
+  if (!feedbacks.length) return undefined;
+  return feedbacks.reduce((a, b) => (a.createdAt >= b.createdAt ? a : b));
+}
+
 export function buildReviewData(
   doc: DocumentResponse,
   validation: ValidationResultResponse | undefined,
@@ -316,6 +325,7 @@ export function buildReviewData(
     const tags = parseList(v.violationTypes);
     const laws = parseList(v.lawMappings);
     return {
+      vid: v.id,
       title: tags.length
         ? v.violationText && v.violationText !== tags.join(", ")
           ? `${tags.join(", ")} - "${v.violationText}"`
@@ -333,7 +343,7 @@ export function buildReviewData(
     };
   });
 
-  const latest = feedbacks[feedbacks.length - 1];
+  const latest = latestFeedback(feedbacks);
 
   return {
     title: doc.name,
@@ -414,7 +424,7 @@ export function buildFeedbackData(
   ranked.forEach((r, rank) => fbRank.set(r.i, rank));
 
   // 가장 최근 검토 의견의 항목별 코멘트(위반문구 id → 코멘트).
-  const latest = feedbacks[feedbacks.length - 1];
+  const latest = latestFeedback(feedbacks);
   const commentByViolation = new Map<number, string>();
   (latest?.items ?? []).forEach((it) =>
     commentByViolation.set(it.violationTextId, it.comment),
@@ -423,13 +433,14 @@ export function buildFeedbackData(
   const feedback: Feedback[] = ranked.map(({ v, risk }) => {
     const tags = parseList(v.violationTypes);
     const laws = parseList(v.lawMappings);
+    // 준법자문가가 검토 화면에서 등록한 피드백 코멘트(위반문구별). 마케팅 화면에서
+    // '준법자문가 피드백'으로 보여 준다. 위반 사유(reason)는 AI 검증 사유로 분리한다.
     const raw = commentByViolation.get(v.id);
-    const reason = raw
-      ? cleanComment(raw)
-      : v.violationReason?.trim() ||
-        (tags.length
-          ? `${tags.join(", ")}에 해당합니다.${laws.length ? ` (${laws.join(", ")})` : ""}`
-          : laws.join(", "));
+    const reason =
+      v.violationReason?.trim() ||
+      (tags.length
+        ? `${tags.join(", ")}에 해당합니다.${laws.length ? ` (${laws.join(", ")})` : ""}`
+        : laws.join(", "));
     return {
       title: tags.length
         ? v.violationText && v.violationText !== tags.join(", ")
@@ -440,6 +451,7 @@ export function buildFeedbackData(
       tag: tags[0] ?? "",
       clause: laws.join(", "),
       reason,
+      reviewComment: raw ? cleanComment(raw) : "",
       suggest: "", // 백엔드에 AI 제안 문구 필드가 없어 비워 둔다.
     };
   });

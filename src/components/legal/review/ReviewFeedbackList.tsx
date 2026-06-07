@@ -9,7 +9,7 @@ interface Props {
   active: number | null;
   judged: Set<number>;
   onSelect: (i: number) => void;
-  onJudge: (i: number) => void;
+  onJudge: (i: number, comment: string) => void;
 }
 
 export default function ReviewFeedbackList({

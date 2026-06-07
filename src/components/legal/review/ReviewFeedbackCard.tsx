@@ -14,7 +14,7 @@ interface Props {
   selected: boolean;
   judged: boolean;
   onSelect: () => void;
-  onJudge: (i: number) => void;
+  onJudge: (i: number, comment: string) => void;
 }
 
 export default function ReviewFeedbackCard({
@@ -35,8 +35,7 @@ export default function ReviewFeedbackCard({
   const register = (e: React.SyntheticEvent) => {
     e.stopPropagation();
     if (!val.trim()) return;
-    onJudge(idx);
-    setVal("");
+    onJudge(idx, val.trim());
   };
 
   return (

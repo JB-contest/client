@@ -47,8 +47,10 @@ export interface Feedback {
   tag: string;
   clause: string;
   reason: string;
+  reviewComment: string;
   suggest: string;
 }
+
 
 export interface HistoryItem {
   ev: string;
@@ -139,6 +141,8 @@ export const FEEDBACK: Feedback[] = [
     clause: "표시광고법 제3조 2항",
     reason:
       '모든 신청자가 당일 승인되는 것처럼 단정하고 있습니다. 승인 여부·소요 시간은 개인별 심사 결과에 따라 달라지므로 "100% 당일 승인" 표현은 사용이 어렵습니다.',
+    reviewComment:
+      "'100%' 단정 표현을 삭제하고 '심사 결과에 따라'와 같은 조건 문구로 바꿔 주세요.",
     suggest: "심사 결과에 따라 당일 심사가 가능합니다",
   },
   {
@@ -148,6 +152,8 @@ export const FEEDBACK: Feedback[] = [
     clause: "표시광고법 제3조 2항",
     reason:
       "객관적 실증 자료 없이 '최저'라는 최상급·배타성 표현을 사용했습니다. 부당한 비교광고로 간주될 수 있어 근거 병기 또는 표현 수정이 필요합니다.",
+    reviewComment:
+      "'업계 최저' 표현은 실증 자료 없이는 사용할 수 없습니다. 근거를 병기하거나 표현을 완화해 주세요.",
     suggest: "합리적인 금리 조건으로 안내드립니다",
   },
   {
@@ -157,6 +163,8 @@ export const FEEDBACK: Feedback[] = [
     clause: "대부업법 시행령 제9조",
     reason:
       "'무조건'은 심사 절차를 부정하는 표현입니다. 한도는 심사 결과에 따라 결정된다는 조건을 반드시 병기해야 합니다.",
+    reviewComment:
+      "'무조건' 표현을 삭제하고 한도가 심사 결과에 따라 결정된다는 조건을 명시해 주세요.",
     suggest: "심사 결과에 따라 최대 1억원까지 가능합니다",
   },
   {
@@ -166,6 +174,8 @@ export const FEEDBACK: Feedback[] = [
     clause: "여신금융 표준약관 제22조",
     reason:
       "면제 조건·적용 기간이 명시되지 않았습니다. 상품 약관상 면제 범위와 예외 사항을 함께 고지해야 합니다.",
+    reviewComment:
+      "면제 조건과 적용 기간, 예외 사항을 약관 기준으로 함께 고지해 주세요.",
     suggest: "조건에 따라 중도상환 수수료가 면제됩니다 (약관 참조)",
   },
 ];

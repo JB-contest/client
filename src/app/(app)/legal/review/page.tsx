@@ -36,6 +36,8 @@ export default function LegalReviewPage() {
   );
   const [active, setActive] = useState<number | null>(null);
   const [judged, setJudged] = useState<Set<number>>(new Set());
+  // 위반문구 id → 준법자문가가 등록한 수정 지시 코멘트.
+  const [comments, setComments] = useState<Record<number, string>>({});
 
   useEffect(() => {
     (async () => {
@@ -91,20 +93,27 @@ export default function LegalReviewPage() {
     );
   }
 
-  const judge = (i: number) =>
+  const judge = (i: number, comment: string) => {
     setJudged((prev) => {
       const n = new Set(prev);
       n.add(i);
       return n;
     });
+    // 카드 인덱스 → 위반문구 id 로 코멘트를 보관한다(반려·검토 저장 시 전송).
+    const vid = d.feedback[i]?.vid;
+    if (vid != null) setComments((c) => ({ ...c, [vid]: comment }));
+  };
   const done = judged.size;
   const total = d.feedback.length;
 
   // 검증 결과의 위반문구 id 로 피드백 항목을 구성한다.
+  // 준법자문가가 등록한 코멘트가 있으면 그것을, 없으면 위반유형·법령 자동 문구를 쓴다.
   const feedbackItems = () =>
     (validation?.violations ?? []).map((v) => ({
       violationTextId: v.id,
-      comment: `${v.violationTypes}${v.lawMappings ? ` · ${v.lawMappings}` : ""}`,
+      comment:
+        comments[v.id]?.trim() ||
+        `${v.violationTypes}${v.lawMappings ? ` · ${v.lawMappings}` : ""}`,
     }));
 
   // 이력 타임라인을 로컬에서 갱신한다(API 성공·오프라인 폴백 모두 반영).

@@ -59,6 +59,7 @@ export interface ReviewSourceSeg {
 }
 
 export interface ReviewFeedback {
+  vid?: number; // 위반문구 id — 입력 코멘트를 해당 violation 에 연결할 때 사용.
   title: string;
   risk: RiskLevel;
   hl: RiskLevel;
