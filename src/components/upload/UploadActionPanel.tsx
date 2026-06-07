@@ -12,6 +12,7 @@ interface Props {
   canSubmit: boolean;
   onSubmit: () => void;
   onReset: () => void;
+  docId?: number | null;
 }
 
 export default function UploadActionPanel({
@@ -19,6 +20,7 @@ export default function UploadActionPanel({
   canSubmit,
   onSubmit,
   onReset,
+  docId,
 }: Props) {
   const router = useRouter();
 
@@ -44,7 +46,13 @@ export default function UploadActionPanel({
           </button>
           <button
             className="btn btn-ghost w-full"
-            onClick={() => router.push(ROUTES.marketing.feedback)}
+            onClick={() =>
+              router.push(
+                docId != null
+                  ? `${ROUTES.marketing.feedback}?id=${docId}`
+                  : ROUTES.marketing.feedback,
+              )
+            }
           >
             <MessagesSquare size={16} />피드백 확인하기
           </button>
