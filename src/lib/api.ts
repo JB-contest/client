@@ -521,9 +521,9 @@ interface ProjectAgg {
   bucket: { waiting: number; ai: number; revise: number; approved: number };
 }
 
-function aggregateProjects(docs: DocumentResponse[]): ProjectAgg[] {
+// 한 소재는 parentId 체인으로 이어진 버전들의 묶음이다. 같은 소재끼리 배열로 묶어 반환한다.
+function groupFamilies(docs: DocumentResponse[]): DocumentResponse[][] {
   const byId = new Map(docs.map((d) => [d.id, d]));
-  // 한 소재는 parentId 체인으로 이어진 버전들의 묶음이다. 최상위 부모 id 를 소재 키로 쓴다.
   const rootId = (d: DocumentResponse): number => {
     let cur = d;
     const seen = new Set<number>();
@@ -533,18 +533,74 @@ function aggregateProjects(docs: DocumentResponse[]): ProjectAgg[] {
     }
     return cur.id;
   };
-
-  // 소재(부모 체인)별 최신 버전만 현재 상태로 집계한다.
-  const familyLatest = new Map<number, DocumentResponse>();
+  const families = new Map<number, DocumentResponse[]>();
   docs.forEach((d) => {
     const r = rootId(d);
-    const cur = familyLatest.get(r);
-    if (!cur || d.version > cur.version) familyLatest.set(r, d);
+    const arr = families.get(r) ?? [];
+    arr.push(d);
+    families.set(r, arr);
   });
+  return [...families.values()];
+}
 
+// 소재(부모 체인)별 최신 버전 문서만 남겨 반환. 프로젝트 집계 등에서 사용.
+export function latestVersions(docs: DocumentResponse[]): DocumentResponse[] {
+  return groupFamilies(docs).map((fam) =>
+    fam.reduce((a, b) => (b.version > a.version ? b : a)),
+  );
+}
+
+// 검증 결과 오류율을 Material 의 err/errC 로 변환한다.
+function errCell(
+  status: DocStatus,
+  validations: ValidationResultResponse[] | undefined,
+): { err: string; errC: Material["errC"] } {
+  const latest = validations?.[validations.length - 1];
+  if (!latest) {
+    return status === "APPROVED"
+      ? { err: "0%", errC: "low" }
+      : { err: "—", errC: "muted" };
+  }
+  const pct = Math.round(latest.errorRate);
+  const errC: Material["errC"] =
+    pct === 0 ? "low" : pct >= 10 ? "high" : pct >= 5 ? "medium" : "low";
+  return { err: `${pct}%`, errC };
+}
+
+// 자료 모아보기(이력 포함) — 모든 버전을 소재별로 묶어 최신 먼저, 이전 버전 순으로 나열한다.
+// 각 행에 version·isLatest 와 실제 오류율(검증 결과 기준)을 채운다.
+export function buildMaterialHistory(
+  docs: DocumentResponse[],
+  validationsByDoc: Map<number, ValidationResultResponse[]>,
+): Material[] {
+  const families = groupFamilies(docs).map((fam) =>
+    [...fam].sort((a, b) => b.version - a.version),
+  );
+  // 최신본 생성일 기준 내림차순으로 소재(패밀리) 정렬 — 최근 소재가 위로.
+  families.sort((a, b) =>
+    (b[0].createdAt ?? "").localeCompare(a[0].createdAt ?? ""),
+  );
+
+  const out: Material[] = [];
+  families.forEach((fam) => {
+    fam.forEach((d, idx) => {
+      const { err, errC } = errCell(d.status, validationsByDoc.get(d.id));
+      out.push({
+        ...docToMaterial(d),
+        err,
+        errC,
+        version: d.version,
+        isLatest: idx === 0,
+      });
+    });
+  });
+  return out;
+}
+
+function aggregateProjects(docs: DocumentResponse[]): ProjectAgg[] {
   // 프로젝트(title) 단위로 묶기. 기간은 해당 title 의 모든 문서 기준.
   const byTitleMaterials = new Map<string, DocumentResponse[]>();
-  familyLatest.forEach((d) => {
+  latestVersions(docs).forEach((d) => {
     const arr = byTitleMaterials.get(d.title) ?? [];
     arr.push(d);
     byTitleMaterials.set(d.title, arr);

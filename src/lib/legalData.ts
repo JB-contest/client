@@ -49,6 +49,8 @@ export interface LegalMaterial {
   err: string;
   errC: "high" | "medium" | "low" | "muted";
   docId?: number; // 실제 문서 id (API 연결 시). 검토 화면으로 행별 이동에 사용.
+  version?: number; // 소재 버전. 이력 표시용.
+  isLatest?: boolean; // 같은 소재(부모 체인) 중 최신 버전 여부.
 }
 
 export interface ReviewSourceSeg {

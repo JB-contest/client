@@ -7,7 +7,12 @@ import FilterChips, {
 } from "./FilterChips";
 import MaterialsTable from "./MaterialsTable";
 import type { Material } from "@/lib/data";
-import { listDocuments, docToMaterial } from "@/lib/api";
+import {
+  listDocuments,
+  getValidationResults,
+  buildMaterialHistory,
+  type ValidationResultResponse,
+} from "@/lib/api";
 
 export default function MaterialsPanel() {
   const [filter, setFilter] = useState<FilterLabel>("전체");
@@ -15,9 +20,21 @@ export default function MaterialsPanel() {
   const [items, setItems] = useState<Material[] | null>(null);
 
   useEffect(() => {
-    listDocuments()
-      .then((docs) => setItems(docs.map(docToMaterial)))
-      .catch(() => setItems([]));
+    (async () => {
+      try {
+        const docs = await listDocuments();
+        const validationsByDoc = new Map<number, ValidationResultResponse[]>();
+        await Promise.all(
+          docs.map(async (d) => {
+            const v = await getValidationResults(d.id).catch(() => []);
+            validationsByDoc.set(d.id, v);
+          }),
+        );
+        setItems(buildMaterialHistory(docs, validationsByDoc));
+      } catch {
+        setItems([]);
+      }
+    })();
   }, []);
 
   const loading = items === null;

@@ -32,7 +32,9 @@ export interface Material {
   status: MaterialStatus;
   err: string;
   errC: "high" | "medium" | "low" | "muted";
-  docId?: number; // 실제 문서 id (API 연결 시). 검토 화면으로 행별 이동에 사용.
+  docId?: number; 
+  version?: number; 
+  isLatest?: boolean;
 }
 
 export interface SourceSeg {

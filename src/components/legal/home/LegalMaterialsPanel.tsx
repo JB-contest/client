@@ -4,7 +4,12 @@ import { useEffect, useMemo, useState } from "react";
 import FilterTabs, { type FilterLabel } from "./FilterTabs";
 import LegalMaterialsTable from "./LegalMaterialsTable";
 import type { LegalMaterial } from "@/lib/legalData";
-import { listDocuments, docToMaterial } from "@/lib/api";
+import {
+  listDocuments,
+  getValidationResults,
+  buildMaterialHistory,
+  type ValidationResultResponse,
+} from "@/lib/api";
 
 const MATCH: Record<FilterLabel, (r: LegalMaterial) => boolean> = {
   전체: () => true,
@@ -20,9 +25,21 @@ export default function LegalMaterialsPanel() {
   const [items, setItems] = useState<LegalMaterial[] | null>(null);
 
   useEffect(() => {
-    listDocuments()
-      .then((docs) => setItems(docs.map(docToMaterial)))
-      .catch(() => setItems([]));
+    (async () => {
+      try {
+        const docs = await listDocuments();
+        const validationsByDoc = new Map<number, ValidationResultResponse[]>();
+        await Promise.all(
+          docs.map(async (d) => {
+            const v = await getValidationResults(d.id).catch(() => []);
+            validationsByDoc.set(d.id, v);
+          }),
+        );
+        setItems(buildMaterialHistory(docs, validationsByDoc));
+      } catch {
+        setItems([]);
+      }
+    })();
   }, []);
 
   const loading = items === null;

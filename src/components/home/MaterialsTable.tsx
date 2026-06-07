@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import clsx from "clsx";
 import { ArrowRight } from "lucide-react";
 import ErrCell from "@/components/ui/ErrCell";
 import Pill from "@/components/ui/Pill";
@@ -44,9 +45,20 @@ export default function MaterialsTable({
           )}
           {!loading &&
             rows.map((r, i) => (
-            <tr key={i}>
-              <td>
-                <div className="font-semibold text-[13.5px]">{r.name}</div>
+            <tr key={i} className={clsx(r.isLatest === false && "is-older")}>
+              <td style={r.isLatest === false ? { paddingLeft: 26 } : undefined}>
+                <div className="flex items-center gap-1.5">
+                  {r.isLatest === false && (
+                    <span className="text-text-3 mr-0.5">└</span>
+                  )}
+                  <div className="font-semibold text-[13.5px]">{r.name}</div>
+                  {r.version != null && (
+                    <span className={clsx("ver-badge", r.isLatest && "is-latest")}>
+                      v{r.version}
+                      {r.isLatest ? " · 최신" : ""}
+                    </span>
+                  )}
+                </div>
                 <div className="text-[11.5px] text-text-3">{r.camp}</div>
               </td>
               <td className="mono text-xs text-text-2">{r.id}</td>
