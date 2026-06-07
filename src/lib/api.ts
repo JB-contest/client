@@ -1,15 +1,3 @@
-// JB 컴플라이언스 API 클라이언트 (MVP).
-// 연결 범위: 핵심 심의 루프 7개 호출
-//   1) GET  /documents                          목록
-//   2) GET  /documents/{id}                      단건
-//   3) GET  /documents/{id}/validation-results   AI 검증 결과
-//   4) GET  /documents/{id}/feedbacks            피드백 목록
-//   5) POST /documents                           업로드(제출)
-//   6) POST /documents/{id}/feedbacks            검토 의견 작성
-//   7) POST /documents/{id}/approvals            최종 결재
-//
-// next.config.mjs 의 rewrite 를 통해 /backend → 백엔드 /api 로 프록시된다.
-
 import type {
   Feedback,
   HistoryItem,
@@ -65,6 +53,7 @@ export interface ViolationTextResponse {
   id: number;
   resultId: number;
   violationText: string;
+  violationReason: string; 
   riskLevel: ApiRisk;
   violationTypes: string;
   lawMappings: string;
@@ -332,9 +321,11 @@ export function buildReviewData(
       hl: risk,
       tags,
       clause: laws.join(", "),
-      reason: tags.length
-        ? `'${v.violationText}' — ${tags.join(", ")}에 해당합니다.${laws.length ? ` (${laws.join(", ")})` : ""}`
-        : laws.join(", "),
+      reason:
+        v.violationReason?.trim() ||
+        (tags.length
+          ? `'${v.violationText}' — ${tags.join(", ")}에 해당합니다.${laws.length ? ` (${laws.join(", ")})` : ""}`
+          : laws.join(", ")),
     };
   });
 
@@ -431,9 +422,10 @@ export function buildFeedbackData(
     const raw = commentByViolation.get(v.id);
     const reason = raw
       ? cleanComment(raw)
-      : tags.length
-        ? `${tags.join(", ")}에 해당합니다.${laws.length ? ` (${laws.join(", ")})` : ""}`
-        : laws.join(", ");
+      : v.violationReason?.trim() ||
+        (tags.length
+          ? `${tags.join(", ")}에 해당합니다.${laws.length ? ` (${laws.join(", ")})` : ""}`
+          : laws.join(", "));
     return {
       title: v.violationText,
       risk,
